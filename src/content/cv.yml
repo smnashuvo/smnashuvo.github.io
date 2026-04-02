@@ -1,0 +1,29 @@
+- id: "education"
+  heading: "Education"
+  items:
+    - title: "MSc in Financial Engineering"
+      description: "Advanced multidisciplinary integration of financial theory, mathematical modeling, and engineering methods to solve complex financial problems. Pursuing through WorldQuant University."
+      datetime: "2026 – Ongoing"
+    - title: "Bachelor of Business Administration in Marketing"
+      description: "Strategic focus on market analysis, consumer psychology, and business analytics."
+      datetime: "2013 – 2017"
+
+- id: "Certifications"
+  heading: "Certifications"
+  items:
+    - title: "Applied AI LAB"
+      description: "Completed intensive laboratory work on machine learning models, data science pipelines, and AI implementation via WorldQuant University."
+      datetime: "2026"
+    - title: "Integrating Generative AI into Business Strategy"
+      description: "Strategic implementation of LLMs and generative workflows into corporate environments and business processes."
+      datetime: "2025"
+
+- id: "Recommendations"
+  heading: "Recommendations"
+  items:
+    - title: "S M Nashir Uddin"
+      description: "Professional endorsement regarding systems analysis and strategic consulting performance."
+      datetime: "2023"
+    - title: "Mohammed Rashedul Karim"
+      description: "Endorsement of analytical writing and technical project management capabilities."
+      datetime: "2022"

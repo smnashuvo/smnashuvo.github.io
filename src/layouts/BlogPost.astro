@@ -1,0 +1,199 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+import Prose from '../components/Prose.astro';
+import ConnectedSystems from '../components/ConnectedSystems.astro';
+import { slugify, withBase } from '../utils/slugify';
+
+interface Props {
+	title: string;
+	description: string;
+	pubDate: Date;
+	updatedDate?: Date;
+    heroImage?: ImageMetadata;
+    Content?: any;
+    tags?: string[];
+}
+
+const { title, description, pubDate, updatedDate, heroImage, tags = [], Content } = Astro.props as Props;
+---
+
+<BaseLayout title={title} description={description} image={heroImage}>
+    
+    <button id="reading-mode-btn" class="fixed bottom-8 right-8 z-50 p-4 rounded-full bg-[color:var(--color-surface)] border border-[color:var(--color-border)] shadow-2xl text-muted hover:text-ink transition-all hover:-translate-y-1 group cursor-pointer" title="Toggle Zen Reading Mode">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-[.active]:hidden">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden group-[.active]:block">
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
+    </button>
+
+    <div class="flex-1 flex flex-col py-12 md:py-16 lg:py-20 space-y-16 transition-all duration-500">
+        <article class="post-page max-w-4xl w-full mx-auto transition-all duration-500">
+            <header class="section-heading transition-all duration-300">
+                <p class="eyebrow text-sm uppercase tracking-[0.35em] text-muted mb-4">Journal</p>
+                
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-black text-ink leading-tight tracking-tight mb-6 [text-wrap:balance]">{title}</h1>
+                
+                <p class="post-meta text-muted">
+                    <FormattedDate date={pubDate} />
+                    {updatedDate && (
+                        <span>
+                            &middot; Updated <FormattedDate date={updatedDate} />
+                        </span>
+                    )}
+                </p>
+                {tags.length > 0 && (
+                    <ul class="mt-6 flex flex-wrap gap-2 text-sm text-muted">
+                        {tags.map((tag) => (
+                            <li class="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color-mix(in_oklab,var(--color-surface)_95%,transparent)] px-3 py-1">
+                                <a class="hover:text-ink transition-colors" href={withBase(`/tags/${slugify(tag)}/`)}>{tag}</a>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </header>
+
+            {heroImage && (
+                <figure class="post-hero-image mt-8 mb-12 flex justify-center">
+                    <a 
+                        href={typeof heroImage === 'string' ? heroImage : heroImage.src} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in"
+                    >
+                        <Image 
+                            src={heroImage} 
+                            alt={title} 
+                            class="max-w-full h-auto block"
+                            style="max-height: 550px;"
+                            loading="eager"        {/* FIX: Starts download immediately */}
+                            fetchpriority="high"   {/* FIX: Prioritizes over background tasks */}
+                        />
+                    </a>
+                </figure>
+            )}
+
+            <section class="post-article mt-10">
+                <Prose>
+                    {Content ? <Content /> : <slot />}
+                </Prose>
+            </section>
+
+            <ConnectedSystems currentTitle={title} tags={tags} collectionType="writings" />
+
+            <div class="distribution-lever mt-8 pt-8 border-t border-[color:var(--color-border)] flex justify-center transition-all duration-300">
+                <button id="share-doc-btn" class="group flex items-center gap-3 px-6 py-3 rounded-full border border-[color:var(--color-border)] bg-[color-mix(in_oklab,var(--color-surface)_50%,transparent)] hover:bg-[color:var(--color-surface)] text-xs font-bold uppercase tracking-[0.2em] text-muted hover:text-ink transition-all duration-300 cursor-pointer">
+                    <span id="share-doc-text">Share</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                        <polyline points="16 6 12 2 8 6"></polyline>
+                        <line x1="12" y1="2" x2="12" y2="15"></line>
+                    </svg>
+                </button>
+            </div>
+        </article>
+    </div>
+</BaseLayout>
+
+<script>
+    const btn = document.getElementById('reading-mode-btn');
+    const body = document.body;
+
+    btn?.addEventListener('click', () => {
+        body.classList.toggle('reading-mode-active');
+        btn.classList.toggle('active');
+    });
+
+    const shareBtn = document.getElementById('share-doc-btn');
+    const shareText = document.getElementById('share-doc-text');
+
+    shareBtn?.addEventListener('click', async () => {
+        const url = window.location.href;
+        const title = document.title;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({ title, url });
+            } catch (err: any) {
+                if (err.name !== 'AbortError') copyToClipboard(url);
+            }
+        } else {
+            copyToClipboard(url);
+        }
+    });
+
+    function copyToClipboard(url: string) {
+        navigator.clipboard.writeText(url).then(() => {
+            if (shareText) {
+                const originalText = shareText.innerText;
+                shareText.innerText = "Link Copied";
+                shareText.classList.add("text-ink");
+                
+                setTimeout(() => {
+                    shareText.innerText = originalText;
+                    shareText.classList.remove("text-ink");
+                }, 2000);
+            }
+        });
+    }
+</script>
+
+<style is:global>
+    body.reading-mode-active header:first-of-type {
+        opacity: 0;
+        pointer-events: none;
+        height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        transition: all 0.5s ease;
+    }
+    
+    body.reading-mode-active footer {
+        display: none !important;
+    }
+
+    body.reading-mode-active .section-heading .eyebrow,
+    body.reading-mode-active .post-meta,
+    body.reading-mode-active .section-heading ul {
+        opacity: 0;
+        height: 0;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        transition: all 0.5s ease;
+    }
+
+    body.reading-mode-active .post-page {
+        max-width: 720px !important;
+    }
+
+    body.reading-mode-active .post-article p,
+    body.reading-mode-active .post-article li {
+        font-size: 1.25rem !important;
+        line-height: 2 !important;
+        color: var(--color-ink) !important;
+    }
+
+    body.reading-mode-active .post-hero-image {
+        opacity: 0.15;
+        filter: grayscale(100%);
+    }
+
+    body.reading-mode-active .distribution-lever,
+    body.reading-mode-active .connected-systems {
+        opacity: 0;
+        pointer-events: none;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        border: none;
+        overflow: hidden;
+    }
+</style>

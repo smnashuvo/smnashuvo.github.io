@@ -1,0 +1,65 @@
+---
+import { getSite } from "../utils/consts";
+
+const site = await getSite();
+const personName = "S M Nazmul Alam";
+const handle = "smnashuvo";
+const siteUrl = "https://smnazmul.com";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": personName,
+  "alternateName": handle,
+  "url": siteUrl,
+  "mainEntityOfPage": siteUrl,
+  "jobTitle": [
+    "Freelance Interpreter",
+    "Independent Systems & Digital Strategy Consultant",
+    "Independent Writer and Analyst",
+    "Human Rights Activist"
+  ],
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Independent"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Chattogram",
+    "addressRegion": "Chattogram",
+    "addressCountry": "BD"
+  },
+  "description": "Bridging technology and strategy through a systems-first lens. Working with AI workflows and digital tools, driven by independent exploration of how complex systems operate, connect, and evolve across domains.",
+  "knowsAbout": [
+    "Systems & Digital Strategy",
+    "Technology and Cybernetics",
+    "Global Politics & Geopolitics",
+    "Policy Analysis & Governance",
+    "Civilization Studies",
+    "Anthropology & Archaeology",
+    "Corporate and Business Analysis",
+    "Education Systems & Development",
+    "Linguistic Interpretation",
+    "Environment & Sustainability"
+  ],
+  "sameAs": [
+    `https://github.com/${handle}`,
+    `https://www.linkedin.com/in/${handle}/`,
+    `https://x.com/${handle}`,
+    `https://facebook.com/${handle}`,
+    "https://independent.academia.edu/SMNazmulAlam",
+    `https://about.me/${handle}`,
+    `https://www.youtube.com/@${handle}`,
+    `https://www.rumble.com/user/${handle}`,
+    `https://scholar.google.com/citations?user=${handle}`,
+    "https://medium.com/@smnashuvo",
+    "https://www.instagram.com/smnashuvo",
+    "https://www.twitch.tv/smnashuvo",
+    "https://www.patreon.com/smnashuvo",
+    "https://www.substack.com/@smnashuvo",
+    "https://orcid.org/0009-0000-6593-2827"
+  ]
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

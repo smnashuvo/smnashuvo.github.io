@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import { withBase } from '../utils/slugify';
+
+interface Props {
+    currentTitle: string;
+    tags: string[];
+    collectionType: 'writings' | 'lab';
+}
+
+const { currentTitle, tags, collectionType } = Astro.props;
+
+// Fetch all posts from the respective collection
+const allPosts = await getCollection(collectionType);
+
+// The Algorithm: Filter out the active post, calculate a relevance score based on shared tags, and pull the top 3.
+const scoredPosts = allPosts
+    .filter(post => post.data.title !== currentTitle)
+    .map(post => {
+        const postTags = post.data.tags || [];
+        const score = postTags.reduce((acc: number, tag: string) => 
+            tags.includes(tag) ? acc + 1 : acc
+        , 0);
+        return { post, score };
+    })
+    .sort((a, b) => {
+        if (b.score !== a.score) {
+            return b.score - a.score; // Highest overlap first
+        }
+        // Fallback: If scores are tied (or 0), show the newest post
+        return b.post.data.pubDate.valueOf() - a.post.data.pubDate.valueOf();
+    })
+    .slice(0, 3)
+    .map(item => item.post);
+---
+
+{scoredPosts.length > 0 && (
+    <div class="connected-systems mt-16 pt-8 border-t border-[color:var(--color-border)] transition-all duration-300">
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-6">Connected Systems</p>
+        <ul class="space-y-4">
+            {scoredPosts.map(post => {
+                const primaryTag = post.data.tags[0];
+                return (
+                    <li class="group">
+                        <a href={withBase(`/${collectionType}/${post.id}/`)} class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 hover:-translate-y-0.5 transition-transform duration-200 block border-b border-transparent hover:border-[color:var(--color-border)] pb-2">
+                            <time class="text-xs font-mono text-muted shrink-0" datetime={post.data.pubDate.toISOString()}>
+                                {post.data.pubDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
+                            </time>
+                            <h4 class="text-base font-semibold text-ink group-hover:text-ink transition-colors leading-snug">
+                                {post.data.title}
+                            </h4>
+                            {primaryTag && (
+                                <span class="hidden sm:inline-block text-[10px] uppercase tracking-wider text-muted border border-[color:var(--color-border)] rounded-full px-2 py-0.5 shrink-0 ml-auto">
+                                    {primaryTag}
+                                </span>
+                            )}
+                        </a>
+                    </li>
+                )
+            })}
+        </ul>
+    </div>
+)}

@@ -1,0 +1,122 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import PostList from '../components/PostList.astro';
+import SectionList from "../components/SectionList.astro";
+import { getCollection } from "astro:content";
+import { getSite } from '../utils/consts';
+import ProjectList from '../components/ProjectList.astro';
+import { Icon } from 'astro-icon/components';
+
+const cv = (await getCollection("cv" as any)) as any[];
+const site = await getSite();
+const author = site.author || {};
+
+// STRICT FILTERING: Targeted handles for the Trust Bridge
+const socialData = site.social || [];
+const github = socialData.find((s: any) => s.id?.toLowerCase() === 'github');
+const linkedin = socialData.find((s: any) => s.id?.toLowerCase() === 'linkedin');
+const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
+---
+
+<PageLayout title={author.name || 'S M Nazmul Alam'}>
+	
+    {/* 1. HERO (IDENTITY ANCHOR) */}
+    <header class="pt-6 pb-24 md:pt-8 md:pb-32 border-b border-[color:var(--color-border)] overflow-hidden">
+        
+        <a href="/" class="inline-block group mb-16 relative">
+            <div class="absolute inset-0 -inset-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl pointer-events-none bg-[color-mix(in_oklab,var(--color-ink)_15%,transparent)] z-0 rounded-full"></div>
+            
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5rem] font-black tracking-tight leading-none text-ink uppercase transition-all duration-300 relative z-10 pr-8">
+                {author.name || 'S M Nazmul Alam'}
+            </h1>
+        </a>
+        
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 relative z-10">
+            <div class="md:col-span-5 space-y-2">
+                {author.role?.map((r: string) => (
+                    <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">{r}</p>
+                ))}
+                {!author.role && (
+                    <>
+                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">Freelance Interpreter</p>
+                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">Independent Consultant</p>
+                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-muted">Systems & Digital Strategy</p>
+                    </>
+                )}
+            </div>
+
+            <div class="md:col-span-7 space-y-8">
+                <p class="text-lg md:text-xl text-muted leading-relaxed max-w-2xl">
+                    {author.description || "Bridging technology and strategy through a systems-first lens. Working with AI workflows and digital tools, driven by independent exploration of how complex systems operate, connect, and evolve across domains."}
+                </p>
+                
+                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4">
+                    <p class="text-sm uppercase tracking-[0.2em] text-ink">{author.location || "Chattogram, Bangladesh"}</p>
+                    
+                    <div class="hidden sm:block w-px h-4 bg-[color:var(--color-border)]"></div>
+                    
+                    <div class="flex items-center gap-6">
+                        <a href="/writings" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
+                            Writings <Icon name="tabler:arrow-right" class="w-4 h-4" />
+                        </a>
+                        <a href="/connect" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
+                            Connect <Icon name="tabler:arrow-right" class="w-4 h-4" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    {/* 1.5. CENTERED TRUST BRIDGE (Solid Brand Icons) */}
+    <div class="flex items-center justify-center gap-12 py-12 border-b border-[color:var(--color-border)]">
+        {github && (
+            <a href={github.href} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-ink transition-all duration-300" aria-label="GitHub">
+                <Icon name="simple-icons:github" class="w-6 h-6" />
+            </a>
+        )}
+        {linkedin && (
+            <a href={linkedin.href} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-ink transition-all duration-300" aria-label="LinkedIn">
+                <Icon name="simple-icons:linkedin" class="w-6 h-6" />
+            </a>
+        )}
+        {x && (
+            <a href={x.href} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-ink transition-all duration-300" aria-label="X (formerly Twitter)">
+                <Icon name="simple-icons:x" class="w-5 h-5" />
+            </a>
+        )}
+        <a href={`mailto:${author.handle}@gmail.com`} class="text-muted hover:text-ink transition-all duration-300" aria-label="Email">
+            <Icon name="tabler:mail-filled" class="w-6 h-6" />
+        </a>
+    </div>
+
+    {/* 2. WRITINGS (FEATURED) */}
+	<PostList
+		heading="Writings"
+		limit={3}
+		viewAllHref="/writings"
+	/>
+
+    {/* 3. LAB (FEATURED) */}
+	<ProjectList
+		heading="Lab"
+		limit={4}
+		viewAllHref="/lab"
+	/>
+
+    {/* 4, 5, 6. CV SECTIONS */}
+    {
+        cv.map((section) => {
+            if (section.data.items) {
+                return (
+                    <SectionList
+                        heading={section.data.heading}
+                        items={section.data.items}
+                    />
+                );
+            }
+            return null;
+        })
+    }
+		
+</PageLayout>

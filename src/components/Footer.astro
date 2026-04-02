@@ -1,0 +1,42 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="py-12 mt-20 border-t border-[color:var(--color-border)]">
+    <div class="content-shell flex flex-col md:flex-row justify-between items-center gap-8 text-center md:text-left">
+        
+        <div class="text-sm text-muted">
+            &copy; {currentYear} S M Nazmul Alam. All rights reserved.
+        </div>
+
+        <div class="flex flex-col items-center md:items-end gap-1">
+            <div class="flex items-baseline gap-3 text-ink">
+                <span class="text-xl font-bold tracking-tight">Chattogram</span>
+                <span id="chattogram-time" class="text-lg font-mono tracking-widest text-muted">--:--</span>
+            </div>
+            <p class="text-xs uppercase tracking-[0.2em] text-muted">Engineered in Bangladesh</p>
+        </div>
+
+    </div>
+</footer>
+
+<script>
+    function updateTime() {
+        const timeElement = document.getElementById('chattogram-time');
+        if (timeElement) {
+            const now = new Date();
+            // Forces the clock to sync strictly with Bangladesh Standard Time
+            const timeString = new Intl.DateTimeFormat('en-US', {
+                timeZone: 'Asia/Dhaka',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            }).format(now);
+            timeElement.textContent = timeString;
+        }
+    }
+    
+    // Fires instantly on load, then updates every 10 seconds to maintain performance
+    updateTime();
+    setInterval(updateTime, 10000);
+</script>

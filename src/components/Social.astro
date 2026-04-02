@@ -1,0 +1,45 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  heading?: string;
+  items?: Array<{ id: string; label: string; href: string; icon?: string }>;
+  class?: string;
+}
+
+const { heading = 'Connect', items = [], class: className = '' } = Astro.props;
+---
+
+<section class={className}>
+  <div class="max-w-[90rem] mx-auto px-8">
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 border-b py-16 border-[color:var(--color-border)]">
+      
+      <div class="lg:sticky lg:top-24 lg:z-40 self-start">
+        <h2 class="text-sm 2xl:text-xl text-ink font-bold uppercase tracking-[0.2em]">
+            {heading}
+        </h2>
+      </div>
+
+      <div class="flex flex-row flex-wrap items-center gap-x-10 gap-y-8 lg:col-span-2">
+        {items.map((s) => (
+          <a
+            class="text-ink hover:text-base-500 transition-colors flex items-center justify-center"
+            href={s.href}
+            title={s.label}
+            aria-label={s.label}   {/* PASSES A11Y AUDIT */}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {s.icon ? (
+              <Icon name={s.icon} class="w-6 h-6 md:w-7 md:h-7" />
+            ) : (
+              <span class="text-sm 2xl:text-lg font-bold uppercase tracking-[0.1em]">{s.label}</span>
+            )}
+          </a>
+        ))}
+        <slot />
+      </div>
+
+    </div>
+  </div>
+</section>

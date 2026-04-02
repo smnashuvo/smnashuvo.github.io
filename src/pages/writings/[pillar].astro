@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import { getSite } from '../../utils/consts';
+// UPDATED: Now importing slugify for the filter
+import { withBase, slugify } from '../../utils/slugify';
+
+export async function getStaticPaths() {
+    const allPillars = ['statecraft', 'civilization', 'infrastructure', 'cyber'];
+    const allPosts = (await getCollection('writings').catch(() => [])) || [];
+
+    return allPillars.map((pillar) => ({
+        params: { pillar },
+        props: { 
+            // HARDENED FILTER: Normalizes comparison and handles both strings and arrays
+            posts: allPosts.filter((p) => {
+                const rawData = p.data.pillar;
+                if (!rawData) return false;
+                const postPillars = Array.isArray(rawData) ? rawData : [rawData];
+                return postPillars.some(val => slugify(val) === pillar);
+            }).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+            pillarName: pillar
+        },
+    }));
+}
+
+const { posts = [], pillarName = 'statecraft' } = Astro.props;
+const site = await getSite();
+
+const titleMap: Record<string, string> = {
+    'statecraft': 'Power & Statecraft',
+    'civilization': 'Civilization',
+    'infrastructure': 'Systems & Infrastructure',
+    'cyber': 'Technology & Cyber'
+};
+const displayTitle = titleMap[pillarName] || pillarName;
+---
+
+<PageLayout title={`${displayTitle} · Writings`} description={`Analytical narratives regarding ${displayTitle}.`}>
+    <section class="content-shell py-12 space-y-10">
+        <header class="space-y-2">
+            <p class="text-sm uppercase tracking-[0.35em] text-muted">Writing Pillar</p>
+            <h1 class="text-4xl font-semibold text-ink">{displayTitle}</h1>
+        </header>
+        
+        {posts.length === 0 ? (
+            <p class="text-muted">No writings published in this pillar yet.</p>
+        ) : (
+            <div class="space-y-6">
+                {posts.map((post) => {
+                    const rawPillar = Array.isArray(post.data.pillar) ? post.data.pillar[0] : post.data.pillar;
+                    const displayPillar = titleMap[slugify(rawPillar)] || rawPillar;
+
+                    return (
+                        <a
+                            class="group block w-full overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition duration-200 hover:-translate-y-[2px] hover:shadow-[0_18px_45px_color-mix(in_oklab,var(--color-ink)_25%,transparent)]"
+                            href={withBase(`/writings/${post.id}/`)}
+                        >
+                            <div class="flex flex-col">
+                                <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted mb-2">
+                                    {displayPillar}
+                                </p>
+                                
+                                <h3 class="text-2xl font-bold text-ink group-hover:text-ink">{post.data.title}</h3>
+                                <p class="mt-3 text-base text-muted line-clamp-2 leading-relaxed">{post.data.description}</p>
+                                
+                                <div class="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[var(--color-border)] pt-4">
+                                    {post.data.tags && post.data.tags.length > 0 && (
+                                        <div class="flex flex-wrap gap-2">
+                                            {post.data.tags.slice(0, 3).map((tag) => (
+                                                <span class="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-surface)_95%,transparent)] px-3 py-1 text-xs text-muted">
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                            {post.data.tags.length > 3 && (
+                                                <span class="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-[color-mix(in_oklab,var(--color-surface)_95%,transparent)] px-3 py-1 text-xs text-muted">
+                                                    +{post.data.tags.length - 3}
+                                                </span>
+                                            )}
+                                        </div>
+                                    )}
+                                    
+                                    <time class="text-xs uppercase tracking-[0.4em] text-muted" datetime={post.data.pubDate.toISOString()}>
+                                        {post.data.pubDate.toLocaleDateString('en-US', {
+                                            day: 'numeric',
+                                            month: 'short',
+                                            year: 'numeric',
+                                        })}
+                                    </time>
+                                </div>
+                            </div>
+                        </a>
+                    );
+                })}
+            </div>
+        )}
+    </section>
+</PageLayout>

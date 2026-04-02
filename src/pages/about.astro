@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import PageLayout from '../layouts/PageLayout.astro';
+import { getSite } from '../utils/consts';
+
+// Ensure your headshot is at src/assets/nazmul.jpg
+import profileImage from '../assets/nazmul.jpg'; 
+
+const site = await getSite();
+const personName = site.author?.name || 'S M Nazmul Alam';
+---
+
+<PageLayout 
+    title={`About · ${personName}`} 
+    description="Systems Architect, Independent Consultant, and Analyst."
+>
+    <section class="content-shell py-12 md:py-20">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row gap-12 lg:gap-20 items-start">
+            
+            {/* THE ARCHITECT'S PORTRAIT */}
+            <div class="w-full md:w-5/12 shrink-0">
+                <div class="aspect-[3/4] w-full bg-[color-mix(in_oklab,var(--color-surface)_80%,transparent)] rounded-[2rem] border border-[color:var(--color-border)] overflow-hidden relative shadow-2xl group">
+                    <Image 
+                        src={profileImage} 
+                        alt={personName}
+                        class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        loading="eager"
+                    />
+                </div>
+            </div>
+
+            {/* VISION & MANIFESTO */}
+            <div class="w-full md:w-7/12 space-y-8 mt-4 md:mt-0">
+                <header class="space-y-4">
+                    <p class="text-sm uppercase tracking-[0.35em] text-muted">Profile</p>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-ink tracking-tight leading-none">The Architect.</h1>
+                </header>
+
+                <div class="prose prose-lg dark:prose-invert text-ink space-y-6 leading-relaxed opacity-90">
+                    <p>
+                        I build and dismantle systems. Whether it is reverse-engineering Android environments at the kernel level, deploying isolated AI infrastructure, or analyzing the friction of bureaucratic governance, my focus is on the mechanics of power and compute.
+                    </p>
+                    <p>
+                        This platform serves as a digital headquarters and a public ledger of my work. It is designed to be free of consumer-grade clutter—built for deep reading, strategic cross-referencing, and ruthless analytical clarity.
+                    </p>
+                    <p>
+                        I operate at the intersection of machine logic and societal infrastructure.
+                    </p>
+                </div>
+                
+                <div class="pt-8 border-t border-[color:var(--color-border)]">
+                    <a href="/connect" class="inline-flex items-center gap-3 px-8 py-4 rounded-full border border-[color:var(--color-border)] bg-[color:var(--color-surface)] text-sm font-bold uppercase tracking-[0.2em] text-muted hover:text-ink hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5">
+                        Initiate Contact
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14"></path>
+                            <path d="m12 5 7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</PageLayout>

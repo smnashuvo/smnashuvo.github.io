@@ -1,0 +1,19 @@
+author:
+  name: S M Nazmul Alam
+  role: Independent Systems & Strategy Consultant | AI & Digital Strategy
+  bio:  Bridging the gap between technology and global strategy. Specializing in AI workflows, reverse engineering, and digital systems analysis. Thinking in patterns and building for the future.
+  location: Dhaka, Bangladesh
+
+social:
+  - id: "x"
+    label: "X"
+    href: "https://x.com/smnashuvo"
+  - id: "github"
+    label: "GitHub"
+    href: "https://github.com/smnashuvo"
+  - id: "linkedin"
+    label: "Linkedin"
+    href: "https://linkedin.com/in/smnashuvo"
+  - id: "email"
+    label: "Email"
+    href: "mailto:smnashuvo@gmail.com"
