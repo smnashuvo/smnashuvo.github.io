@@ -26,5 +26,11 @@ Disallow: /
 User-agent: ClaudeBot
 allow: /
 
+User-agent: xai-crawler
+allow: /
+
+User-agent: DeepSeeker
+allow: /
+
 # Sitemap for better crawling
 Sitemap: https://smnazmul.com/sitemap-index.xml
