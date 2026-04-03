@@ -1,0 +1,30 @@
+User-agent: *
+Allow: /
+
+# ALLOW: AI Search & Real-time Verification
+# These bots help Gemini and ChatGPT find your verified identity
+User-agent: Google-Extended
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# BLOCK: Bulk AI Training/Scraping
+# These bots scrape your content for model weights without citing you
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+# Sitemap for better crawling
+Sitemap: https://smnazmul.com/sitemap-index.xml
