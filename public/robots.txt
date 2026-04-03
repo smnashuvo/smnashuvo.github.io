@@ -12,7 +12,7 @@ Allow: /
 # BLOCK: Bulk AI Training/Scraping
 # These bots scrape your content for model weights without citing you
 User-agent: GPTBot
-Disallow: /
+allow: /
 
 User-agent: CCBot
 Disallow: /
@@ -24,7 +24,7 @@ User-agent: Amazonbot
 Disallow: /
 
 User-agent: ClaudeBot
-Disallow: /
+allow: /
 
 # Sitemap for better crawling
 Sitemap: https://smnazmul.com/sitemap-index.xml
