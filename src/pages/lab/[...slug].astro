@@ -1,0 +1,34 @@
+---
+import { type CollectionEntry, getCollection, render } from 'astro:content';
+import ProjectPost from '../../layouts/ProjectPost.astro';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('lab');
+	return projects.map((project) => {
+		// 1. Remove extension
+		const cleanId = project.id.replace(/\.[^/.]+$/, "");
+		
+		// 2. Extract Domain
+		const domainData = project.data.domain;
+		const primaryDomain = Array.isArray(domainData) ? domainData[0] : domainData;
+
+		// 3. Build hierarchical slug
+		const slug = cleanId.includes('/') 
+			? cleanId 
+			: (primaryDomain ? `${primaryDomain}/${cleanId}` : cleanId);
+
+		return {
+			params: { slug },
+			props: project,
+		};
+	});
+}
+
+type Props = CollectionEntry<'lab'>;
+const project = Astro.props;
+const { Content } = await render(project);
+---
+
+<ProjectPost {...project.data}>
+	<Content />
+</ProjectPost>

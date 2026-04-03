@@ -8,7 +8,6 @@ import { withBase } from '../../utils/slugify';
 const posts = (await getCollection('writings')).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-
 const site = await getSite();
 
 // TRANSLATION LAYER
@@ -35,10 +34,21 @@ const pillarMap: Record<string, string> = {
                     const rawPillar = Array.isArray(post.data.pillar) ? post.data.pillar[0] : post.data.pillar;
                     const displayPillar = pillarMap[rawPillar] || rawPillar;
 
+                    /** * IDENTITY ANCHOR LOGIC: 
+                     * We must build the link to match the [...slug].astro route exactly.
+                     */
+                    // 1. Remove extension (e.g., '.md')
+                    const cleanId = post.id.replace(/\.[^/.]+$/, "");
+                    
+                    // 2. Prepend pillar if it's not already in the path
+                    const linkSlug = cleanId.includes('/') 
+                        ? cleanId 
+                        : (rawPillar ? `${rawPillar}/${cleanId}` : cleanId);
+
                     return (
                         <a
                             class="group block w-full overflow-hidden rounded-[28px] border border-[color:var(--color-border)] bg-[color:var(--color-surface)] p-6 shadow-none transition duration-200 hover:-translate-y-[2px] hover:shadow-[0_18px_45px_color-mix(in_oklab,var(--color-ink)_25%,transparent)]"
-                            href={withBase(`/writings/${post.id}/`)}
+                            href={withBase(`/writings/${linkSlug}/`)}
                         >
                             <div class="flex flex-col">
                                 <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted mb-2">
@@ -49,7 +59,7 @@ const pillarMap: Record<string, string> = {
                                 <p class="mt-3 text-base text-muted line-clamp-2 leading-relaxed">{post.data.description}</p>
 
                                 <div class="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-[color:var(--color-border)] pt-4">
-                                    {post.data.tags.length > 0 && (
+                                    {post.data.tags && post.data.tags.length > 0 && (
                                         <div class="flex flex-wrap gap-2">
                                             {post.data.tags.slice(0, 3).map((tag) => (
                                                 <span class="inline-flex items-center gap-2 rounded-full border border-[color:var(--color-border)] bg-[color-mix(in_oklab,var(--color-surface)_95%,transparent)] px-3 py-1 text-xs text-muted">

@@ -3,17 +3,28 @@ import { type CollectionEntry, getCollection, render } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
 
 export async function getStaticPaths() {
-	// Point to the new writings collection
 	const posts = await getCollection('writings');
-	return posts.map((post) => ({
-		params: { slug: post.id },
-		props: post,
-	}));
+	return posts.map((post) => {
+		// 1. Remove file extension from the ID (e.g., 'post.md' -> 'post')
+		const cleanId = post.id.replace(/\.[^/.]+$/, "");
+		
+		// 2. Extract Pillar
+		const pillarData = post.data.pillar;
+		const primaryPillar = Array.isArray(pillarData) ? pillarData[0] : pillarData;
+		
+		// 3. Logic: Prepend pillar only if cleanId isn't already a nested path
+		const slug = cleanId.includes('/') 
+			? cleanId 
+			: (primaryPillar ? `${primaryPillar}/${cleanId}` : cleanId);
+
+		return {
+			params: { slug },
+			props: post,
+		};
+	});
 }
 
-// Define the Props based on the writings schema
 type Props = CollectionEntry<'writings'>;
-
 const post = Astro.props;
 const { Content } = await render(post);
 ---

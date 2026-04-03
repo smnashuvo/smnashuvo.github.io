@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 import { getSite } from '../../utils/consts';
-// UPDATED: Now importing slugify for the filter
 import { withBase, slugify } from '../../utils/slugify';
 
 export async function getStaticPaths() {
@@ -12,7 +11,6 @@ export async function getStaticPaths() {
     return allPillars.map((pillar) => ({
         params: { pillar },
         props: { 
-            // HARDENED FILTER: Normalizes comparison and handles both strings and arrays
             posts: allPosts.filter((p) => {
                 const rawData = p.data.pillar;
                 if (!rawData) return false;
@@ -33,6 +31,7 @@ const titleMap: Record<string, string> = {
     'infrastructure': 'Systems & Infrastructure',
     'cyber': 'Technology & Cyber'
 };
+
 const displayTitle = titleMap[pillarName] || pillarName;
 ---
 
@@ -51,10 +50,18 @@ const displayTitle = titleMap[pillarName] || pillarName;
                     const rawPillar = Array.isArray(post.data.pillar) ? post.data.pillar[0] : post.data.pillar;
                     const displayPillar = titleMap[slugify(rawPillar)] || rawPillar;
 
+                    /** * IDENTITY ANCHOR FIX: 
+                     * We must strip the extension and ensure the pillar is in the URL.
+                     */
+                    const cleanId = post.id.replace(/\.[^/.]+$/, "");
+                    const linkSlug = cleanId.includes('/') 
+                        ? cleanId 
+                        : (rawPillar ? `${slugify(rawPillar)}/${cleanId}` : cleanId);
+
                     return (
                         <a
                             class="group block w-full overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition duration-200 hover:-translate-y-[2px] hover:shadow-[0_18px_45px_color-mix(in_oklab,var(--color-ink)_25%,transparent)]"
-                            href={withBase(`/writings/${post.id}/`)}
+                            href={withBase(`/writings/${linkSlug}/`)}
                         >
                             <div class="flex flex-col">
                                 <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted mb-2">

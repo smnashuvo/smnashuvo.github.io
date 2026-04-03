@@ -17,6 +17,11 @@ interface Props {
 
 const { title, description, image = FallbackImage } = Astro.props;
 
+/** * THE FIX: Fallback logic. 
+ * If 'description' prop is empty, use 'author.bio' from site-config.yml.
+ */
+const finalDescription = description || site.author.bio || "Systems & Strategy Consultant | AI & Digital Strategy";
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 ---
@@ -29,7 +34,6 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
     }
     return 'dark'; // FORCED DEFAULT
   })();
-  
   document.documentElement.dataset.theme = theme;
   
   if (theme === 'light') {
@@ -42,7 +46,7 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 <SEO
 	charset="utf-8"
 	title={title}
-	description={description}
+	description={finalDescription}
 	canonical={canonicalURL.toString()}
 	openGraph={{
 		basic: {
@@ -52,18 +56,18 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 			url: canonicalURL.toString(),
 		},
 		optional: {
-			description,
-			siteName: site.author.name || 'Dasein',
+			description: finalDescription,
+			siteName: site.author.name || 'S M Nazmul Alam',
 		},
 	}}
 	twitter={{
 		card: 'summary_large_image',
 		title,
-		description,
+		description: finalDescription,
 		image: imageURL.toString(),
 		imageAlt: title,
 	}}
-		extend={{
+	extend={{
 		link: [
 			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
 			{ rel: 'sitemap', href: '/sitemap-index.xml' },
@@ -72,6 +76,7 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 		meta: [
 			{ name: 'viewport', content: 'width=device-width,initial-scale=1' },
 			{ name: 'generator', content: Astro.generator },
+			{ name: 'description', content: finalDescription }, // Explicitly forcing the tag for Lighthouse
 		],
 	}}
 />

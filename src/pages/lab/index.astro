@@ -4,13 +4,11 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import { getSite } from '../../utils/consts';
 import { withBase, slugify } from '../../utils/slugify';
 
-// 1. Fetch the 'lab' collection and sort by newest first
 const projects = (await getCollection('lab')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 const site = await getSite();
 
-// 2. Domain Mapping for professional UI display
 const domainMap: Record<string, string> = {
     'ai': 'AI & Workflows',
     'android': 'Android (vayu)',
@@ -23,7 +21,6 @@ const domainMap: Record<string, string> = {
 	<section class="content-shell py-12 space-y-10">
 		<header class="space-y-3">
 			<p class="text-sm uppercase tracking-[0.35em] text-muted">Lab / Warlogs</p>
-            {/* BUMPED: Matching your Connect page header scale */}
 			<h1 class="text-4xl md:text-5xl font-black text-ink tracking-tight">Technical Lab</h1>
 			<p class="text-muted max-w-3xl leading-relaxed text-lg">
 				Documenting system-level modifications, AI self-hosting, and reverse engineering workflows.
@@ -35,14 +32,19 @@ const domainMap: Record<string, string> = {
 		) : (
 			<div class="space-y-6">
 				{projects.map((project) => {
-                    // Extract and normalize the primary domain for the UI label
                     const rawDomain = Array.isArray(project.data.domain) ? project.data.domain[0] : project.data.domain;
                     const displayDomain = domainMap[slugify(rawDomain)] || rawDomain;
+
+                    /** * IDENTITY ANCHOR LINK LOGIC */
+                    const cleanId = project.id.replace(/\.[^/.]+$/, "");
+                    const linkSlug = cleanId.includes('/') 
+                        ? cleanId 
+                        : (rawDomain ? `${slugify(rawDomain)}/${cleanId}` : cleanId);
 
                     return (
                         <a
                             class="group block w-full overflow-hidden rounded-[28px] border border-[var(--color-border)] bg-[var(--color-surface)] p-6 transition duration-200 hover:-translate-y-[2px] hover:shadow-[0_18px_45px_color-mix(in_oklab,var(--color-ink)_25%,transparent)]"
-                            href={withBase(`/lab/${project.id}/`)}
+                            href={withBase(`/lab/${linkSlug}/`)}
                         >
                             <div class="flex flex-col">
                                 <p class="text-xs font-semibold uppercase tracking-[0.35em] text-muted mb-2">
