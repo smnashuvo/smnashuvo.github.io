@@ -1,7 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import { withBase } from '../utils/slugify';
+import { withBase, slugify } from '../utils/slugify';
 
 interface RawPost {
     id?: string;
@@ -62,21 +62,23 @@ const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;
                 {
                     visiblePosts.map((post) => {
                         const p = getPostData(post) || {};
-                        const id = (post as any).id;
-                        const href = id
-                            ? withBase(`/writings/${id}/`)
-                            : p.href
-                                ? withBase(p.href)
-                                : undefined;
-                        const rawDate = p.pubDate ?? null;
-                        const pubDate = rawDate
-                            ? rawDate instanceof Date
-                                ? rawDate
-                                : new Date(rawDate)
-                            : null;
+                        const rawId = (post as any).id;
                         
-                        // Extract Pillar safely if it's an array
-                        const pillarStr = p.pillar ? (Array.isArray(p.pillar) ? p.pillar[0] : p.pillar) : null;
+                        /** IDENTITY ANCHOR LOGIC: Prepend Pillar & Strip Extension */
+                        const cleanId = rawId ? rawId.replace(/\.[^/.]+$/, "") : "";
+                        const rawPillar = Array.isArray(p.pillar) ? p.pillar[0] : p.pillar;
+                        
+                        const linkSlug = cleanId.includes('/') 
+                            ? cleanId 
+                            : (rawPillar ? `${slugify(rawPillar)}/${cleanId}` : cleanId);
+
+                        const href = rawId
+                            ? withBase(`/writings/${linkSlug}/`)
+                            : p.href ? withBase(p.href) : undefined;
+                            
+                        const rawDate = p.pubDate ?? null;
+                        const pubDate = rawDate ? (rawDate instanceof Date ? rawDate : new Date(rawDate)) : null;
+                        const pillarStr = rawPillar || null;
 
                         return (
                             <a
@@ -96,7 +98,6 @@ const visiblePosts = typeof limit === "number" ? posts.slice(0, limit) : posts;
                                                 {pillarStr}
                                             </p>
                                         )}
-
                                         <h3 class="text-2xl font-bold text-ink group-hover:text-ink">{p.title}</h3>
                                         <p class="mt-3 text-base text-muted line-clamp-2 leading-relaxed">{p.description}</p>
 

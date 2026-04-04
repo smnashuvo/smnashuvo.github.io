@@ -1,4 +1,8 @@
 ---
+import { Image } from 'astro:assets';
+// 1. IMPORT THE LOCAL IMAGE FROM YOUR ASSETS FOLDER
+import nazmulImg from '../assets/nazmul.jpg'; 
+
 import PageLayout from '../layouts/PageLayout.astro';
 import PostList from '../components/PostList.astro';
 import SectionList from "../components/SectionList.astro";
@@ -31,22 +35,40 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
             </h1>
         </a>
         
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 relative z-10">
-            <div class="md:col-span-5 space-y-2">
-                {author.role?.map((r: string) => (
-                    <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">{r}</p>
-                ))}
-                {!author.role && (
-                    <>
-                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">Freelance Interpreter</p>
-                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-ink">Independent Consultant</p>
-                        <p class="text-sm font-bold uppercase tracking-[0.2em] text-muted">Systems & Digital Strategy</p>
-                    </>
-                )}
+        {/* FIX: md:gap-[1.2in] sets the physical distance; items-start keeps bio grounded */}
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-[1.2in] relative z-10 items-start">
+            
+            {/* COLUMN 1: IDENTITY (items-end anchors text to the bottom of the image) */}
+            <div class="md:col-span-5 flex items-end gap-4 md:gap-6">
+                <div class="shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border border-[color:var(--color-border)] shadow-lg bg-[color:var(--color-surface)]">
+                    <Image 
+                        src={nazmulImg} 
+                        alt="S M Nazmul Alam" 
+                        class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                        width={400}
+                        height={400}
+                        loading="eager"
+                        fetchpriority="high"
+                    />
+                </div>
+                
+                <div class="pb-1 space-y-1 md:space-y-2 min-w-0">
+                    {author.role?.map((r: string) => (
+                        <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">{r}</p>
+                    ))}
+                    {!author.role && (
+                        <>
+                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">Freelance Interpreter</p>
+                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">Systems & Digital Strategy Consultant</p>
+                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-muted whitespace-nowrap">Independent Writer and Analyst</p>
+                        </>
+                    )}
+                </div>
             </div>
 
+            {/* COLUMN 2: BIO (Shifted left by the explicit 1.2-inch gap) */}
             <div class="md:col-span-7 space-y-8">
-                <p class="text-lg md:text-xl text-muted leading-relaxed max-w-2xl">
+                <p class="text-lg md:text-xl text-muted leading-relaxed text-justify hyphens-auto">
                     {author.description || "Bridging technology and strategy through a systems-first lens. Working with AI workflows and digital tools, driven by independent exploration of how complex systems operate, connect, and evolve across domains."}
                 </p>
                 
@@ -68,7 +90,7 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
         </div>
     </header>
 
-    {/* 1.5. CENTERED TRUST BRIDGE (Solid Brand Icons) */}
+    {/* 1.5. CENTERED TRUST BRIDGE */}
     <div class="flex items-center justify-center gap-12 py-12 border-b border-[color:var(--color-border)]">
         {github && (
             <a href={github.href} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-ink transition-all duration-300" aria-label="GitHub">

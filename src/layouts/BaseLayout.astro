@@ -21,7 +21,6 @@ const { title = site.author.name, description = '', image } = Astro.props;
 <html lang="en">
     <head>
         <BaseHead title={title} description={description} image={image} />
-        {/* THE SEMANTIC BRAIN INJECTION */}
         <SEO />
     </head>
     <body>
@@ -30,45 +29,56 @@ const { title = site.author.name, description = '', image } = Astro.props;
             <slot />
         </main>
         <Footer />
-        
         <BackToTop />
     </body>
 </html>
 
 <style is:global>
-  /* Force long URLs and text to break instead of stretching the screen */
+  /* 1. Universal Text Hardening */
   p, a, li {
     overflow-wrap: break-word;
     word-wrap: break-word;
     word-break: break-word;
+    /* Clean vertical lines for technical/geopolitical reading */
+    text-align: justify;
+    hyphens: auto;
   }
   
-  /* Confine code blocks and allow them to scroll horizontally */
+  /* 2. Confine code blocks */
   pre {
     max-width: 100vw;
     overflow-x: auto;
     white-space: pre;
   }
   
-  /* Ensure the main container doesn't get pushed out of bounds */
+  /* 3. Main container safety */
   main, article, .content-shell {
     min-width: 0;
     max-width: 100%;
     overflow-x: hidden;
   }
 
-  /* Enforce High-Contrast, Premium Readability for all Articles */
+  /* 4. Enforce Premium Readability for all Articles & Homepage Bio */
   .post-article p, 
   .post-article li, 
-  .post-article .prose {
+  .post-article .prose,
+  .hero-bio {
     color: var(--color-ink) !important;
     font-size: 1.125rem !important;
     line-height: 1.8 !important;
     opacity: 0.95 !important;
+    text-align: justify !important;
+    hyphens: auto !important;
   }
   
   .post-article strong {
     color: var(--color-ink) !important;
     font-weight: 800 !important;
+  }
+
+  /* Prevent awkward gaps in short headings or meta info */
+  h1, h2, h3, h4, .post-meta, .eyebrow {
+    text-align: left !important;
+    hyphens: none !important;
   }
 </style>

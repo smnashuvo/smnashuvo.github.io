@@ -5,21 +5,22 @@
  * Reusable section component for lists like "Education", "Teaching", "Speaking", etc.
  *
  * Props:
- *  - heading: string
- *  - items: Array<{
- *      title: string;
- *      description?: string;
- *      datetime?: string; // value for the `datetime` attribute on <time>
- *      dateLabel?: string; // what to render inside <time>, defaults to `datetime`
- *    }>
- *
- * Slots:
- *  - default: (optional) any extra content to render after the items (e.g. "View all" link)
+ * - heading: string
+ * - items: Array<{
+ * title: string;
+ * description?: string;
+ * datetime?: string;
+ * institution?: string;
+ * role?: string;
+ * dateLabel?: string;
+ * }>
  */
 interface Item {
     title: string;
     description?: string;
     datetime?: string;
+    institution?: string;
+    role?: string;
     dateLabel?: string;
     href?: string;
     target?: string;
@@ -40,71 +41,64 @@ function isExternal(href: string) {
 }
 ---
 
-<section>
+<section class="section-container border-b border-base-200">
     <div class="max-w-[90rem] mx-auto px-8">
-        <div
-            class="grid grid-cols-1 gap-4 md:grid-cols-3 border-b py-8 border-base-200"
-        >
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3 py-8">
+            {/* 1. CATEGORY HEADING */}
             <div class="lg:sticky lg:top-24 lg:z-40 self-start">
-                <h2
-                    class="text-sm 2xl:text-xl text-base-900 font-bold uppercase"
-                >
+                <h2 class="text-xs font-bold uppercase tracking-widest text-base-900">
                     {heading}
                 </h2>
             </div>
 
+            {/* 2. CONTENT AREA */}
             <div class="flex flex-col gap-12 lg:col-span-2">
-                {
-                    items.map((item) => (
-                        <article class="group relative grid grid-cols-1 gap-4 lg:grid-cols-3 lg:items-start">
-                            <div class="lg:col-span-2">
-                                <h3 class="text-sm 2xl:text-xl text-base-900 font-bold uppercase">
-                                    {item.href ? (
-                                        <a
-                                            href={item.href}
-                                            target={
-                                                item.target ??
-                                                ((item.external ??
-                                                isExternal(item.href))
-                                                    ? "_blank"
-                                                    : undefined)
-                                            }
-                                            rel={
-                                                item.rel ??
-                                                ((item.external ??
-                                                isExternal(item.href))
-                                                    ? "noopener noreferrer"
-                                                    : undefined)
-                                            }
-                                        >
-                                            <span class="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl" />
-                                            <span class="relative z-10">
-                                                {item.title}
-                                            </span>
-                                        </a>
-                                    ) : (
-                                        item.title
-                                    )}
-                                </h3>
-                                {item.description && (
-                                    <p class="text-xs 2xl:text-lg mt-1 text-base-600">
-                                        {item.description}
-                                    </p>
+                {items.map((item) => (
+                    <article class="group relative grid grid-cols-1 gap-4 lg:grid-cols-4 lg:items-start">
+                        
+                        {/* CONTENT: Constrained to 75% for visible distance from year */}
+                        <div class="lg:col-span-3 pr-8">
+                            <h3 class="text-sm font-bold uppercase tracking-tight text-base-900">
+                                {item.href ? (
+                                    <a 
+                                        href={item.href} 
+                                        target={item.target ?? ((item.external ?? isExternal(item.href)) ? "_blank" : undefined)}
+                                        rel={item.rel ?? ((item.external ?? isExternal(item.href)) ? "noopener noreferrer" : undefined)}
+                                    >
+                                        <span class="absolute -inset-x-4 -inset-y-6 z-20 sm:-inset-x-6 sm:rounded-2xl" />
+                                        <span class="relative z-10">{item.title}</span>
+                                    </a>
+                                ) : (
+                                    item.title
                                 )}
-                            </div>
+                            </h3>
 
-                            {item.datetime && (
-                                <p class="text-xs 2xl:text-lg text-base-600 lg:ml-auto">
-                                    <time datetime={item.datetime}>
-                                        {item.dateLabel ?? item.datetime}
-                                    </time>
+                            {/* MUTED INSTITUTION OR ROLE: Uses text-base-500 for a muted, professional look */}
+                            {(item.institution || item.role) && (
+                                <p class="text-[10px] md:text-xs uppercase font-semibold text-base-500 mt-0.5 tracking-wide">
+                                    {item.institution || item.role}
                                 </p>
                             )}
-                        </article>
-                    ))
-                }
 
-                <!-- Slot for optional extra content, e.g. "View all" link -->
+                            {/* DESCRIPTION: Justified for the "Knowledge Garden" aesthetic */}
+                            {item.description && (
+                                <p class="text-xs md:text-sm leading-relaxed text-base-600 mt-2 text-justify hyphens-auto">
+                                    {item.description}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* TIMELINE: Anchored to the right 25% for a clean gutter */}
+                        {item.datetime && (
+                            <div class="lg:col-span-1 lg:text-right pt-0.5">
+                                <time datetime={item.datetime} class="text-[10px] md:text-xs font-mono uppercase text-base-500 tracking-wider whitespace-nowrap">
+                                    {item.dateLabel ?? item.datetime}
+                                </time>
+                            </div>
+                        )}
+                    </article>
+                ))}
+                
                 <slot />
             </div>
         </div>

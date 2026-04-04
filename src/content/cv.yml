@@ -2,19 +2,23 @@
   heading: "Education"
   items:
     - title: "MSc in Financial Engineering"
+      institution: "WorldQuant University"
       description: "Advanced multidisciplinary integration of financial theory, mathematical modeling, and engineering methods to solve complex financial problems. Pursuing through WorldQuant University."
       datetime: "2026 – Ongoing"
     - title: "Bachelor of Business Administration in Marketing"
+      institution: "Royal University of Dhaka"
       description: "Strategic focus on market analysis, consumer psychology, and business analytics."
-      datetime: "2013 – 2017"
+      datetime: "2017"
 
 - id: "Certifications"
   heading: "Certifications"
   items:
     - title: "Applied AI LAB"
+      institution: "WorldQuant University"
       description: "Completed intensive laboratory work on machine learning models, data science pipelines, and AI implementation via WorldQuant University."
       datetime: "2026"
     - title: "Integrating Generative AI into Business Strategy"
+      institution: "National Association of State Boards of Accountancy (NASBA)"
       description: "Strategic implementation of LLMs and generative workflows into corporate environments and business processes."
       datetime: "2025"
 
@@ -22,8 +26,10 @@
   heading: "Recommendations"
   items:
     - title: "S M Nashir Uddin"
+      role: "MD & CEO, SBAC Bank Investment Limited" # Split from title
       description: "Professional endorsement regarding systems analysis and strategic consulting performance."
       datetime: "2023"
     - title: "Mohammed Rashedul Karim"
-      description: "Endorsement of analytical writing and technical project management capabilities."
+      role: "FAVP, UCB Stock Brokerage Limited" # Split from title
+      description: "Endorsement of business analysis and technical project management capabilities."
       datetime: "2022"
