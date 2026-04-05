@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-// 1. IMPORT THE LOCAL IMAGE FROM YOUR ASSETS FOLDER
 import nazmulImg from '../assets/nazmul.jpg'; 
 
 import PageLayout from '../layouts/PageLayout.astro';
@@ -15,7 +14,6 @@ const cv = (await getCollection("cv" as any)) as any[];
 const site = await getSite();
 const author = site.author || {};
 
-// STRICT FILTERING: Targeted handles for the Trust Bridge
 const socialData = site.social || [];
 const github = socialData.find((s: any) => s.id?.toLowerCase() === 'github');
 const linkedin = socialData.find((s: any) => s.id?.toLowerCase() === 'linkedin');
@@ -24,21 +22,15 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
 
 <PageLayout title={author.name || 'S M Nazmul Alam'}>
 	
-    {/* 1. HERO (IDENTITY ANCHOR) */}
     <header class="pt-6 pb-24 md:pt-8 md:pb-32 border-b border-[color:var(--color-border)] overflow-hidden">
-        
         <a href="/" class="inline-block group mb-16 relative">
             <div class="absolute inset-0 -inset-x-12 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-2xl pointer-events-none bg-[color-mix(in_oklab,var(--color-ink)_15%,transparent)] z-0 rounded-full"></div>
-            
             <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-[4.5rem] xl:text-[5rem] font-black tracking-tight leading-none text-ink uppercase transition-all duration-300 relative z-10 pr-8">
                 {author.name || 'S M Nazmul Alam'}
             </h1>
         </a>
         
-        {/* FIX: md:gap-[1.2in] sets the physical distance; items-start keeps bio grounded */}
         <div class="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-[1.2in] relative z-10 items-start">
-            
-            {/* COLUMN 1: IDENTITY (items-end anchors text to the bottom of the image) */}
             <div class="md:col-span-5 flex items-end gap-4 md:gap-6">
                 <div class="shrink-0 w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden border border-[color:var(--color-border)] shadow-lg bg-[color:var(--color-surface)]">
                     <Image 
@@ -56,27 +48,16 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
                     {author.role?.map((r: string) => (
                         <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">{r}</p>
                     ))}
-                    {!author.role && (
-                        <>
-                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">Freelance Interpreter</p>
-                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-ink whitespace-nowrap">Systems & Digital Strategy Consultant</p>
-                            <p class="text-[11px] md:text-sm font-bold uppercase tracking-[0.15em] text-muted whitespace-nowrap">Independent Writer and Analyst</p>
-                        </>
-                    )}
                 </div>
             </div>
 
-            {/* COLUMN 2: BIO (Shifted left by the explicit 1.2-inch gap) */}
             <div class="md:col-span-7 space-y-8">
                 <p class="text-lg md:text-xl text-muted leading-relaxed text-justify hyphens-auto">
-                    {author.description || "Bridging technology and strategy through a systems-first lens. Working with AI workflows and digital tools, driven by independent exploration of how complex systems operate, connect, and evolve across domains."}
+                    {author.description}
                 </p>
-                
                 <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 pt-4">
                     <p class="text-sm uppercase tracking-[0.2em] text-ink">{author.location || "Chattogram, Bangladesh"}</p>
-                    
                     <div class="hidden sm:block w-px h-4 bg-[color:var(--color-border)]"></div>
-                    
                     <div class="flex items-center gap-6">
                         <a href="/writings" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
                             Writings <Icon name="tabler:arrow-right" class="w-4 h-4" />
@@ -90,7 +71,6 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
         </div>
     </header>
 
-    {/* 1.5. CENTERED TRUST BRIDGE */}
     <div class="flex items-center justify-center gap-12 py-12 border-b border-[color:var(--color-border)]">
         {github && (
             <a href={github.href} target="_blank" rel="noopener noreferrer" class="text-muted hover:text-ink transition-all duration-300" aria-label="GitHub">
@@ -107,38 +87,16 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
                 <Icon name="simple-icons:x" class="w-5 h-5" />
             </a>
         )}
-        <a href={`mailto:${author.handle}@gmail.com`} class="text-muted hover:text-ink transition-all duration-300" aria-label="Email">
+        <a href={`mailto:${author.email}`} class="text-muted hover:text-ink transition-all duration-300" aria-label="Email">
             <Icon name="tabler:mail-filled" class="w-6 h-6" />
         </a>
     </div>
 
-    {/* 2. WRITINGS (FEATURED) */}
-	<PostList
-		heading="Writings"
-		limit={3}
-		viewAllHref="/writings"
-	/>
+	<PostList heading="Writings" limit={3} viewAllHref="/writings" />
+	<ProjectList heading="Lab" limit={4} viewAllHref="/lab" />
 
-    {/* 3. LAB (FEATURED) */}
-	<ProjectList
-		heading="Lab"
-		limit={4}
-		viewAllHref="/lab"
-	/>
-
-    {/* 4, 5, 6. CV SECTIONS */}
-    {
-        cv.map((section) => {
-            if (section.data.items) {
-                return (
-                    <SectionList
-                        heading={section.data.heading}
-                        items={section.data.items}
-                    />
-                );
-            }
-            return null;
-        })
-    }
+    {cv.map((section) => section.data.items && (
+        <SectionList heading={section.data.heading} items={section.data.items} />
+    ))}
 		
 </PageLayout>
