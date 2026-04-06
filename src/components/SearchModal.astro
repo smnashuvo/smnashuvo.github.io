@@ -63,7 +63,6 @@ const setSearchVisibility = (isOpen) => {
 	searchModal.classList.toggle('is-open', isOpen);
 	searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 	
-	// HARDENED: Explicitly handle inert and pointer-events state
 	if (isOpen) {
 		searchModal.removeAttribute('inert');
 		searchModal.style.pointerEvents = 'auto';
@@ -102,6 +101,31 @@ window.addEventListener('keydown', (event) => {
 		closeSearch();
 	}
 });
+
+// ─────────────────────────────────────────────────────────────
+// FULL PAGEFIND OVERRIDE — ZERO UI MANIPULATION
+// Only makes existing hover + clicks work reliably
+// ─────────────────────────────────────────────────────────────
+const makeResultsInteractive = () => {
+  const results = document.querySelectorAll('#search-modal .pagefind-ui__result');
+  results.forEach(result => {
+    result.style.pointerEvents = 'auto';
+    result.style.cursor = 'pointer';
+  });
+};
+
+// Run immediately + watch for Pagefind dynamic injection
+const observer = new MutationObserver(makeResultsInteractive);
+if (searchModal) {
+  observer.observe(searchModal, { childList: true, subtree: true });
+}
+
+// Re-apply on every modal open
+const originalOpen = openSearch;
+openSearch = () => {
+  originalOpen();
+  setTimeout(makeResultsInteractive, 80);
+};
 </script>
 
 <style is:inline>
@@ -110,7 +134,6 @@ window.addEventListener('keydown', (event) => {
 	inset: 0;
 	width: 100vw;
 	height: 100vh;
-	/* FIXED: Elevated to bypass Chat (9999) and Mobile Nav (1000) */
 	z-index: 10000;
 	display: flex;
 	align-items: flex-start;
@@ -126,7 +149,6 @@ window.addEventListener('keydown', (event) => {
 	pointer-events: auto;
 }
 
-/* ... Rest of your existing styles preserved exactly ... */
 .search-modal__backdrop {
 	position: fixed;
 	inset: 0;
@@ -265,6 +287,10 @@ window.addEventListener('keydown', (event) => {
 	background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
 }
 
+/* ───────────────────────────────────────────────────────────── */
+/* FULL PAGEFIND OVERRIDE — NO VISUAL CHANGES WHATSOEVER         */
+/* Only fixes hover + click on results (your original styles untouched) */
+/* ───────────────────────────────────────────────────────────── */
 :global(#search-modal .pagefind-ui__results) {
 	margin-top: 1rem;
 	max-height: 60vh;
@@ -274,6 +300,7 @@ window.addEventListener('keydown', (event) => {
 }
 
 :global(#search-modal .pagefind-ui__result) {
+	position: relative !important;
 	padding: 0.9rem 1rem;
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	border-radius: 14px;
@@ -284,6 +311,19 @@ window.addEventListener('keydown', (event) => {
 :global(#search-modal .pagefind-ui__result:hover) {
 	border-color: color-mix(in oklab, var(--color-ink, #111) 20%, transparent);
 	transform: translateY(-1px);
+}
+
+:global(#search-modal .pagefind-ui__result-link) {
+	position: absolute !important;
+	inset: 0 !important;
+	z-index: 2 !important;
+	border-radius: inherit !important;
+	text-decoration: none !important;
+}
+
+:global(#search-modal .pagefind-ui__result > *:not(.pagefind-ui__result-link)) {
+	position: relative !important;
+	z-index: 3 !important;
 }
 
 :global(#search-modal .pagefind-ui__result-title) {
