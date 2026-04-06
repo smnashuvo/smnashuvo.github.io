@@ -26,7 +26,7 @@ const { email } = Astro.props;
                 <div class="chat-step hidden space-y-4 text-left">
                     <p class="text-sm text-muted italic">"Inquiry nature?"</p>
                     <div class="grid grid-cols-1 gap-2">
-                        {['Interpretation', 'Strategy', 'Other'].map(type => (
+                        {['Interpretation', 'Consultation', 'General'].map(type => (
                             <label class="flex items-center gap-3 p-3 border border-[var(--color-border)] rounded-lg cursor-pointer hover:bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)] transition-colors">
                                 <input type="radio" name="type" value={type} class="accent-ink" />
                                 <span class="text-[10px] uppercase font-bold tracking-widest text-muted">{type}</span>
