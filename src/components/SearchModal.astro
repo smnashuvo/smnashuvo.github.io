@@ -44,8 +44,7 @@ const { class: className = '' } = Astro.props as Props;
 			</div>
 		</div>
 		<Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
-		<p class="search-modal__footnote">Powered by Pagefind.
-Start typing to search posts, pages, and warlogs.</p>
+		<p class="search-modal__footnote">Powered by Pagefind. Start typing to search posts, pages, and warlogs.</p>
 	</div>
 </div>
 
@@ -55,7 +54,6 @@ const searchToggle = document.getElementById('search-toggle');
 const searchClose = document.getElementById('search-close');
 const searchBackdrop = document.querySelector('[data-close="search"]');
 
-// Ensure modal is not constrained by ancestor transforms/overflow.
 if (searchModal && searchModal.parentElement !== document.body) {
 	document.body.appendChild(searchModal);
 }
@@ -63,11 +61,21 @@ if (searchModal && searchModal.parentElement !== document.body) {
 const setSearchVisibility = (isOpen) => {
 	if (!searchModal) return;
 	searchModal.classList.toggle('is-open', isOpen);
-searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-	searchModal.toggleAttribute('inert', !isOpen);
+	searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+	
+	// HARDENED: Explicitly handle inert and pointer-events state
+	if (isOpen) {
+		searchModal.removeAttribute('inert');
+		searchModal.style.pointerEvents = 'auto';
+	} else {
+		searchModal.setAttribute('inert', '');
+		searchModal.style.pointerEvents = 'none';
+	}
+	
 	if (searchToggle) searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 	document.body.classList.toggle('search-open', isOpen);
 };
+
 const focusSearchInput = () => {
 	const input = document.querySelector('#search-modal .pagefind-ui__search-input');
 	if (input instanceof HTMLInputElement) {
@@ -75,6 +83,7 @@ const focusSearchInput = () => {
 		input.select();
 	}
 };
+
 const openSearch = () => {
 	setSearchVisibility(true);
 	window.requestAnimationFrame(() => {
@@ -82,12 +91,12 @@ const openSearch = () => {
 	});
 };
 
-const closeSearch = () => {
-	setSearchVisibility(false);
-};
+const closeSearch = () => setSearchVisibility(false);
+
 if (searchToggle) searchToggle.addEventListener('click', openSearch);
 if (searchClose) searchClose.addEventListener('click', closeSearch);
 if (searchBackdrop) searchBackdrop.addEventListener('click', closeSearch);
+
 window.addEventListener('keydown', (event) => {
 	if (event.key === 'Escape' && searchModal?.classList.contains('is-open')) {
 		closeSearch();
@@ -96,13 +105,13 @@ window.addEventListener('keydown', (event) => {
 </script>
 
 <style is:inline>
-
 .search-modal {
 	position: fixed;
 	inset: 0;
 	width: 100vw;
 	height: 100vh;
-z-index: 80;
+	/* FIXED: Elevated to bypass Chat (9999) and Mobile Nav (1000) */
+	z-index: 10000;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
@@ -117,6 +126,7 @@ z-index: 80;
 	pointer-events: auto;
 }
 
+/* ... Rest of your existing styles preserved exactly ... */
 .search-modal__backdrop {
 	position: fixed;
 	inset: 0;
@@ -124,7 +134,7 @@ z-index: 80;
 	height: 100vh;
 	background: var(--color-paper, #f9f9f9);
 	backdrop-filter: blur(14px) saturate(1.2);
-opacity: 0.94;
+	opacity: 0.94;
 	z-index: 0;
 }
 
@@ -135,10 +145,10 @@ opacity: 0.94;
 .search-modal__panel {
 	position: relative;
 	width: min(960px, 100%);
-margin-top: clamp(32px, 6vh, 96px);
+	margin-top: clamp(32px, 6vh, 96px);
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
-border-radius: 24px;
+	border-radius: 24px;
 	box-shadow: 0 24px 80px color-mix(in oklab, var(--color-ink, #111) 12%, transparent);
 	padding: clamp(1rem, 2vw, 1.5rem);
 	z-index: 1;
@@ -154,7 +164,7 @@ border-radius: 24px;
 
 .search-modal__title h2 {
 	margin: 0.15rem 0 0;
-font-size: clamp(1.2rem, 2vw, 1.45rem);
+	font-size: clamp(1.2rem, 2vw, 1.45rem);
 }
 
 .search-modal__eyebrow {
@@ -167,7 +177,7 @@ font-size: clamp(1.2rem, 2vw, 1.45rem);
 
 .search-modal__actions {
 	display: inline-flex;
-align-items: center;
+	align-items: center;
 	gap: 0.65rem;
 }
 
@@ -178,10 +188,10 @@ align-items: center;
 	min-width: 42px;
 	padding: 0.35rem 0.5rem;
 	border-radius: 10px;
-border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
+	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-surface, #fff) 85%, var(--color-ink, #111) 4%);
 	font-size: 0.72rem;
-letter-spacing: 0.1em;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 }
 
@@ -192,23 +202,23 @@ letter-spacing: 0.1em;
 	width: 36px;
 	height: 36px;
 	border-radius: 12px;
-border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
+	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-surface, #fff) 90%, transparent);
 	color: var(--color-ink, currentColor);
 	cursor: pointer;
-transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+	transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
 }
 
 .search-close:hover {
 	border-color: color-mix(in oklab, var(--color-ink, #111) 26%, transparent);
-background: color-mix(in oklab, var(--color-surface, #fff) 82%, var(--color-ink, #111) 6%);
+	background: color-mix(in oklab, var(--color-surface, #fff) 82%, var(--color-ink, #111) 6%);
 	transform: translateY(-1px);
 }
 
 .search-modal__footnote {
 	margin: 0.75rem 0 0;
 	font-size: 0.82rem;
-color: var(--color-muted, #6b6b6b);
+	color: var(--color-muted, #6b6b6b);
 }
 
 :global(body.search-open) {
@@ -223,11 +233,11 @@ color: var(--color-muted, #6b6b6b);
 	display: flex;
 	align-items: center;
 	gap: 0.65rem;
-padding: 0.85rem 1rem;
+	padding: 0.85rem 1rem;
 	border-radius: 18px;
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
-box-shadow:
+	box-shadow:
 		inset 0 0 0 1px color-mix(in oklab, var(--color-ink, #111) 6%, transparent),
 		0 16px 36px color-mix(in oklab, var(--color-ink, #111) 10%, transparent);
 }
@@ -243,16 +253,16 @@ box-shadow:
 
 :global(#search-modal .pagefind-ui__search-clear) {
 	border-radius: 10px;
-padding: 0.35rem 0.5rem;
+	padding: 0.35rem 0.5rem;
 	border: 1px solid transparent;
 	background: color-mix(in oklab, var(--color-ink, #111) 6%, transparent);
 	cursor: pointer;
-transition: border-color 120ms ease, background-color 120ms ease;
+	transition: border-color 120ms ease, background-color 120ms ease;
 }
 
 :global(#search-modal .pagefind-ui__search-clear:hover) {
 	border-color: var(--color-border, rgba(0, 0, 0, 0.12));
-background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
+	background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
 }
 
 :global(#search-modal .pagefind-ui__results) {
@@ -267,7 +277,7 @@ background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
 	padding: 0.9rem 1rem;
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	border-radius: 14px;
-background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
+	background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
 	transition: border-color 120ms ease, transform 120ms ease;
 }
 
@@ -279,7 +289,7 @@ background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
 :global(#search-modal .pagefind-ui__result-title) {
 	margin: 0 0 0.35rem;
 	font-size: 1rem;
-font-weight: 700;
+	font-weight: 700;
 }
 
 :global(#search-modal .pagefind-ui__result-excerpt) {
@@ -306,12 +316,10 @@ font-weight: 700;
 
 	.search-modal__actions {
 		align-self: flex-end;
-}
+	}
 
 	.search-trigger {
 		justify-content: center;
-	}
-
 	}
 }
 </style>

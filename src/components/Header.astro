@@ -8,23 +8,23 @@ import { Icon } from 'astro-icon/components';
 const site = await getSite();
 ---
 
-<header class="site-header w-full">
+<header class="site-header w-full relative z-[50]">
   <nav class="h-full w-full flex items-center justify-between md:justify-end">
     
+    {/* MENU BUTTON: Preserved hit-box refinement, no white box */}
     <button
       id="nav-toggle"
       aria-label="Toggle navigation"
       aria-pressed="false"
-      class="md:hidden text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase"
+      class="md:hidden text-xs 2xl:text-lg text-base-900 hover:text-base-500 font-bold uppercase border-none bg-transparent p-4 -m-4 outline-none shadow-none z-[1001]"
     >
       Menu
     </button>
 
     <div class="hidden md:flex items-center gap-6">
-      
       <div class="flex items-center gap-6 text-xs 2xl:text-lg text-base-900 font-bold uppercase">
         <HeaderLink href="/">Home</HeaderLink>
-
+        
         {/* DESKTOP WRITINGS PILLARS */}
         <div class="relative group">
           <a href="/writings" class="flex items-center gap-1 hover:text-base-500 py-2">
@@ -61,53 +61,62 @@ const site = await getSite();
       </div>
 
       <div class="flex items-center gap-4 border-l border-gray-300 dark:border-gray-700 pl-4 text-base-900">
-        <a href="/connect" class="text-xs 2xl:text-lg font-bold uppercase hover:text-base-500 transition-colors">
-          Connect
-        </a>
-        
-        <div class="hover:text-base-500 transition-colors cursor-pointer flex items-center justify-center">
-          <SearchModal />
-        </div>
-        
-        <div class="hover:text-base-500 transition-colors cursor-pointer flex items-center justify-center">
-          <ThemeToggle />
-        </div>
+        <a href="/connect" class="text-xs 2xl:text-lg font-bold uppercase hover:text-base-500 transition-colors">Connect</a>
+        <SearchModal />
+        <ThemeToggle />
       </div>
     </div>
 
     {/* MOBILE NAVIGATION TRAY */}
-    <div id="mobile-nav" role="dialog" aria-label="Mobile navigation" aria-hidden="true" style="display:none;" class="fixed inset-0 z-[1000] p-8 overflow-auto bg-[var(--color-paper)] text-[var(--color-ink)]">
-      <button id="mobile-close" aria-label="Close navigation" style="position:absolute;right:1rem;top:1rem;" class="text-xs 2xl:text-lg font-bold uppercase hover:text-base-500">Close</button>
+    <div 
+      id="mobile-nav" 
+      role="dialog" 
+      aria-label="Mobile navigation" 
+      aria-hidden="true" 
+      style="display:none;"
+      class="fixed inset-0 z-[1000] p-8 overflow-auto bg-[var(--color-paper)] text-[var(--color-ink)]"
+    >
+      <button 
+        id="mobile-close" 
+        aria-label="Close navigation" 
+        class="absolute right-4 top-4 p-2 text-ink hover:text-base-500 border-none bg-transparent outline-none shadow-none"
+      >
+        <Icon name="tabler:x" class="w-8 h-8" />
+      </button>
       
-      <div class="flex flex-col gap-6 items-start mt-8">
+      <div id="mobile-content" class="flex flex-col gap-6 items-start mt-8 w-full">
         <div class="flex flex-col gap-4 text-xl font-bold uppercase w-full">
-          <HeaderLink href="/">Home</HeaderLink>
+          <HeaderLink href="/" class="w-fit">Home</HeaderLink>
           <div class="flex flex-col gap-2">
-            <HeaderLink href="/writings">Writings</HeaderLink>
+            <HeaderLink href="/writings" class="w-fit">Writings</HeaderLink>
             <div class="flex flex-col gap-3 pl-4 border-l-2 border-[color:var(--color-border)] text-sm text-base-900">
-              <a href="/writings/statecraft" class="hover:text-base-500">Power & Statecraft</a>
-              <a href="/writings/civilization" class="hover:text-base-500">Civilization</a>
-              <a href="/writings/infrastructure" class="hover:text-base-500">Systems & Infrastructure</a>
-              <a href="/writings/cyber" class="hover:text-base-500">Technology & Cyber</a>
+              <a href="/writings/statecraft" class="w-fit hover:text-base-500">Power & Statecraft</a>
+              <a href="/writings/civilization" class="w-fit hover:text-base-500">Civilization</a>
+              <a href="/writings/infrastructure" class="w-fit hover:text-base-500">Systems & Infrastructure</a>
+              <a href="/writings/cyber" class="w-fit hover:text-base-500">Technology & Cyber</a>
             </div>
           </div>
           <div class="flex flex-col gap-2">
-            <HeaderLink href="/lab">Lab</HeaderLink>
+            <HeaderLink href="/lab" class="w-fit">Lab</HeaderLink>
             <div class="flex flex-col gap-3 pl-4 border-l-2 border-[color:var(--color-border)] text-sm text-base-900">
-              <a href="/lab/ai" class="hover:text-base-500">AI</a>
-              <a href="/lab/android" class="hover:text-base-500">Android</a>
-              <a href="/lab/systems" class="hover:text-base-500">Systems</a>
-              <a href="/lab/reverse-engineering" class="hover:text-base-500">Reverse Engineering</a>
+              <a href="/lab/ai" class="w-fit hover:text-base-500">AI</a>
+              <a href="/lab/android" class="w-fit hover:text-base-500">Android</a>
+              <a href="/lab/systems" class="w-fit hover:text-base-500">Systems</a>
+              <a href="/lab/reverse-engineering" class="w-fit hover:text-base-500">Reverse Engineering</a>
             </div>
           </div>
-          <HeaderLink href="/about">About</HeaderLink>
-          <HeaderLink href="/connect">Connect</HeaderLink>
+          <HeaderLink href="/about" class="w-fit">About</HeaderLink>
+          <HeaderLink href="/connect" class="w-fit">Connect</HeaderLink>
         </div>
 
         <hr class="w-full border-[color:var(--color-border)]" />
 
         <div class="flex items-center gap-6 text-base-900">
-          <button aria-label="Open Search" onclick="document.getElementById('search-toggle').click(); document.getElementById('mobile-close').click();" class="hover:text-base-500 transition-colors cursor-pointer flex items-center justify-center">
+          <button 
+            aria-label="Open Search" 
+            id="mobile-search-btn" 
+            class="hover:text-base-500 transition-colors cursor-pointer flex items-center justify-center border-none bg-transparent"
+          >
             <Icon name="tabler:search" class="w-6 h-6" />
           </button>
           <ThemeToggle class="hover:text-base-500" />
@@ -121,7 +130,7 @@ const site = await getSite();
   const navButton = document.getElementById("nav-toggle");
   const mobileNav = document.getElementById("mobile-nav");
   const mobileClose = document.getElementById("mobile-close");
-  const navElement = document.querySelector("nav");
+  const mobileSearch = document.getElementById("mobile-search-btn");
 
   const applyNav = (state) => {
     const isOpen = state === "open";
@@ -130,41 +139,42 @@ const site = await getSite();
     if (mobileNav) {
       mobileNav.style.display = isOpen ? "block" : "none";
       mobileNav.setAttribute("aria-hidden", isOpen ? "false" : "true");
-      if (isOpen) {
-        const first = mobileNav.querySelector('a, button, [tabindex]:not([tabindex="-1"])');
-        if (first instanceof HTMLElement) first.focus();
-      } else {
-        if (navButton instanceof HTMLElement) navButton.focus();
-      }
     }
   };
 
   const toggleNav = () => applyNav(document.documentElement.dataset.nav === "open" ? "closed" : "open");
   const closeNav = () => applyNav("closed");
 
-  const on = (el, evt, handler) => { if (!el) return; el.addEventListener(evt, handler); };
-  applyNav("closed");
-
-  on(navButton, "click", () => toggleNav());
-  on(mobileClose, "click", closeNav);
-
-  window.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && document.documentElement.dataset.nav === 'open') closeNav();
+  if (navButton) navButton.addEventListener("click", (e) => {
+    e.stopPropagation();
+    toggleNav();
   });
-  if (navElement) {
-    navElement.addEventListener('click', (e) => {
-      const t = e.target;
-      if (!(t instanceof Element)) return;
-      if (t.closest && t.closest('a') && !t.closest('.group')) closeNav();
+
+  if (mobileClose) mobileClose.addEventListener("click", closeNav);
+
+  // FIXED: mobile search trigger - bypasses potential state race conditions
+  if (mobileSearch) {
+    mobileSearch.addEventListener("click", (e) => {
+      e.preventDefault();
+      const searchToggle = document.getElementById('search-toggle');
+      if (searchToggle) {
+        closeNav();
+        // Delay trigger to ensure mobile-nav cleanup doesn't block search opening
+        window.requestAnimationFrame(() => searchToggle.click());
+      }
     });
   }
 
-  document.addEventListener("click", (event) => {
-    if (document.documentElement.dataset.nav !== "open") return;
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    const clickedToggle = navButton && navButton.contains(target);
-    const clickedNav = navElement && navElement.contains(target);
-    if (!clickedToggle && !clickedNav) closeNav();
+  // FIXED: Blank Spots logic - restricted to the mobile navigation lifecycle
+  if (mobileNav) {
+    mobileNav.addEventListener("click", (e) => {
+      if (document.documentElement.dataset.nav !== "open") return;
+      const isInteractive = e.target.closest('a') || e.target.closest('button') || e.target.closest('.theme-toggle');
+      if (!isInteractive) closeNav();
+    });
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.documentElement.dataset.nav === 'open') closeNav();
   });
 </script>

@@ -1,0 +1,100 @@
+---
+import { Icon } from 'astro-icon/components';
+const { email } = Astro.props;
+---
+
+<div class="fixed bottom-36 right-6 md:bottom-16 md:right-16 z-[9999] flex flex-col items-end gap-4 print:hidden">
+    
+    <div id="chat-window" class="hidden w-[310px] md:w-[380px] relative p-[2px] overflow-hidden rounded-[var(--radius-card)] shadow-2xl transition-all duration-300">
+        
+        <div class="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,#007cf0,#6827b0,#00dfd8,#007cf0)] [mask-image:radial-gradient(circle_at_center,transparent_calc(100%-4px),black_100%)]"></div>
+        
+        <div class="relative w-full h-full bg-[color-mix(in_oklab,var(--color-surface)_10%,transparent)] backdrop-blur-2xl rounded-[calc(var(--radius-card)-2px)] flex flex-col overflow-hidden">
+            <header class="p-4 border-b border-[var(--color-border)] flex justify-between items-center bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)]">
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-muted">BinaryForge / Intake</span>
+                <button id="close-chat" class="text-muted hover:text-ink transition-colors p-1">
+                    <Icon name="tabler:x" class="w-5 h-5" />
+                </button>
+            </header>
+
+            <form id="chat-form" action="https://formspree.io/f/your-id" method="POST" class="p-6 space-y-6">
+                <div class="chat-step space-y-3 text-left">
+                    <p class="text-sm text-muted italic">"Initializing... Who am I speaking with?"</p>
+                    <input type="text" name="name" required placeholder="Name..." class="w-full bg-transparent border-b border-[var(--color-border)] py-2 text-ink outline-none focus:border-ink transition-colors" />
+                </div>
+
+                <div class="chat-step hidden space-y-4 text-left">
+                    <p class="text-sm text-muted italic">"Inquiry nature?"</p>
+                    <div class="grid grid-cols-1 gap-2">
+                        {['Interpretation', 'Strategy', 'Other'].map(type => (
+                            <label class="flex items-center gap-3 p-3 border border-[var(--color-border)] rounded-lg cursor-pointer hover:bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)] transition-colors">
+                                <input type="radio" name="type" value={type} class="accent-ink" />
+                                <span class="text-[10px] uppercase font-bold tracking-widest text-muted">{type}</span>
+                            </label>
+                        ))}
+                    </div>
+                </div>
+
+                <div class="chat-step hidden space-y-4 text-left">
+                    <p class="text-sm text-muted italic">"Message & Email?"</p>
+                    <textarea name="message" required rows="3" class="w-full bg-transparent border border-[var(--color-border)] p-3 text-sm text-ink outline-none rounded-lg"></textarea>
+                    <input type="email" name="email" required placeholder="email@example.com" class="w-full bg-transparent border-b border-[var(--color-border)] py-2 text-ink outline-none" />
+                    <button type="submit" class="w-full py-3 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all rounded-full">Transmit ⚡</button>
+                </div>
+                
+                <button type="button" id="next-btn" class="text-[10px] font-bold uppercase text-muted hover:text-ink transition-colors">Continue ↵</button>
+            </form>
+        </div>
+    </div>
+
+    <button id="toggle-bubble" class="group relative w-16 h-16 rounded-full overflow-hidden shadow-2xl hover:scale-105 transition-transform active:scale-95">
+        <div class="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,#007cf0,#6827b0,#00dfd8,#007cf0)] [mask-image:radial-gradient(circle,transparent_60%,black_61%)]"></div>
+        <div class="relative w-full h-full flex items-center justify-center text-ink backdrop-blur-md bg-transparent">
+            <Icon name="chat-intake" class="w-10 h-10" />
+        </div>
+    </button>
+</div>
+
+<style>
+    @keyframes spin-slow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    .animate-spin-slow {
+        animation: spin-slow 5s linear infinite;
+    }
+</style>
+
+<script>
+    const bubble = document.getElementById('toggle-bubble');
+    const win = document.getElementById('chat-window');
+    const close = document.getElementById('close-chat');
+    const steps = document.querySelectorAll('.chat-step');
+    const nextBtn = document.getElementById('next-btn');
+    let currentStep = 0;
+
+    bubble?.addEventListener('click', () => {
+        win?.classList.toggle('hidden');
+        win?.classList.toggle('flex');
+    });
+
+    close?.addEventListener('click', () => {
+        win?.classList.add('hidden');
+        win?.classList.remove('flex');
+    });
+
+    nextBtn?.addEventListener('click', () => {
+        const inputs = Array.from(steps[currentStep].querySelectorAll('input, textarea')) as (HTMLInputElement | HTMLTextAreaElement)[];
+        let valid = true;
+        inputs.forEach(i => { if (!i.checkValidity()) { i.reportValidity(); valid = false; } });
+
+        if (valid && currentStep < steps.length - 1) {
+            steps[currentStep].classList.add('hidden');
+            currentStep++;
+            steps[currentStep].classList.remove('hidden');
+            if (currentStep === steps.length - 1) {
+                if (nextBtn) nextBtn.classList.add('hidden');
+            }
+        }
+    });
+</script>

@@ -2,6 +2,7 @@
 import PageLayout from '../layouts/PageLayout.astro';
 import { getSite } from '../utils/consts';
 import { Icon } from 'astro-icon/components';
+import ChatToggle from '../components/ChatToggle.astro';
 
 const site = await getSite();
 const author = site.author || {};
@@ -65,4 +66,6 @@ const allSocials = site.social || [];
             <p class="text-sm font-bold uppercase tracking-[0.4em] text-muted opacity-40">Hustle with Loyalty & Respect.</p>
         </div>
     </section>
+
+    <ChatToggle email={author.email} />
 </PageLayout>
