@@ -27,7 +27,7 @@ const { class: className = '' } = Astro.props as Props;
 	aria-modal="true"
 	aria-hidden="true"
 	aria-labelledby="search-modal-title"
-	inert
+	style="display: none;"
 >
 	<div class="search-modal__backdrop" data-close="search"></div>
 	<div class="search-modal__panel">
@@ -49,83 +49,68 @@ const { class: className = '' } = Astro.props as Props;
 </div>
 
 <script is:inline>
-const searchModal = document.getElementById('search-modal');
-const searchToggle = document.getElementById('search-toggle');
-const searchClose = document.getElementById('search-close');
-const searchBackdrop = document.querySelector('[data-close="search"]');
+(function() {
+  const searchModal = document.getElementById('search-modal');
+  const searchToggle = document.getElementById('search-toggle');
+  const searchClose = document.getElementById('search-close');
+  const searchBackdrop = document.querySelector('[data-close="search"]');
 
-if (searchModal && searchModal.parentElement !== document.body) {
-	document.body.appendChild(searchModal);
-}
+  if (searchModal && searchModal.parentElement !== document.body) {
+    document.body.appendChild(searchModal);
+  }
 
-const setSearchVisibility = (isOpen) => {
-	if (!searchModal) return;
-	searchModal.classList.toggle('is-open', isOpen);
-	searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-	
-	if (isOpen) {
-		searchModal.removeAttribute('inert');
-		searchModal.style.pointerEvents = 'auto';
-	} else {
-		searchModal.setAttribute('inert', '');
-		searchModal.style.pointerEvents = 'none';
-	}
-	
-	if (searchToggle) searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-	document.body.classList.toggle('search-open', isOpen);
-};
+  const setSearchVisibility = (isOpen) => {
+    if (!searchModal) return;
+    searchModal.style.display = isOpen ? 'flex' : 'none';
 
-const focusSearchInput = () => {
-	const input = document.querySelector('#search-modal .pagefind-ui__search-input');
-	if (input instanceof HTMLInputElement) {
-		input.focus();
-		input.select();
-	}
-};
+    window.requestAnimationFrame(() => {
+      searchModal.classList.toggle('is-open', isOpen);
+      searchModal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      if (searchToggle) searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      document.body.classList.toggle('search-open', isOpen);
+    });
+  };
 
-const openSearch = () => {
-	setSearchVisibility(true);
-	window.requestAnimationFrame(() => {
-		window.setTimeout(focusSearchInput, 60);
-	});
-};
+  const focusSearchInput = () => {
+    const input = document.querySelector('#search-modal .pagefind-ui__search-input');
+    if (input instanceof HTMLInputElement) {
+      input.focus();
+      input.select();
+    }
+  };
 
-const closeSearch = () => setSearchVisibility(false);
+  const openSearch = () => {
+    setSearchVisibility(true);
+    window.setTimeout(focusSearchInput, 80);
+  };
 
-if (searchToggle) searchToggle.addEventListener('click', openSearch);
-if (searchClose) searchClose.addEventListener('click', closeSearch);
-if (searchBackdrop) searchBackdrop.addEventListener('click', closeSearch);
+  const closeSearch = () => setSearchVisibility(false);
 
-window.addEventListener('keydown', (event) => {
-	if (event.key === 'Escape' && searchModal?.classList.contains('is-open')) {
-		closeSearch();
-	}
-});
+  if (searchToggle) searchToggle.addEventListener('click', openSearch);
+  if (searchClose) searchClose.addEventListener('click', closeSearch);
+  if (searchBackdrop) searchBackdrop.addEventListener('click', closeSearch);
 
-// ─────────────────────────────────────────────────────────────
-// FULL PAGEFIND OVERRIDE — ZERO UI MANIPULATION
-// Only makes existing hover + clicks work reliably
-// ─────────────────────────────────────────────────────────────
-const makeResultsInteractive = () => {
-  const results = document.querySelectorAll('#search-modal .pagefind-ui__result');
-  results.forEach(result => {
-    result.style.pointerEvents = 'auto';
-    result.style.cursor = 'pointer';
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && searchModal?.classList.contains('is-open')) {
+      closeSearch();
+    }
   });
-};
 
-// Run immediately + watch for Pagefind dynamic injection
-const observer = new MutationObserver(makeResultsInteractive);
-if (searchModal) {
-  observer.observe(searchModal, { childList: true, subtree: true });
-}
+  // THE JS HIT-BOX FIX: Forces the entire card to trigger navigation
+  document.addEventListener('click', (e) => {
+    if (!searchModal || !searchModal.classList.contains('is-open')) return;
 
-// Re-apply on every modal open
-const originalOpen = openSearch;
-openSearch = () => {
-  originalOpen();
-  setTimeout(makeResultsInteractive, 80);
-};
+    const resultCard = e.target.closest('.pagefind-ui__result');
+    if (resultCard) {
+      const link = resultCard.querySelector('a.pagefind-ui__result-link');
+      if (link && e.target.tagName.toLowerCase() !== 'a') {
+        e.preventDefault();
+        window.location.href = link.href;
+      }
+    }
+  });
+
+})();
 </script>
 
 <style is:inline>
@@ -134,7 +119,7 @@ openSearch = () => {
 	inset: 0;
 	width: 100vw;
 	height: 100vh;
-	z-index: 10000;
+	z-index: 10005;
 	display: flex;
 	align-items: flex-start;
 	justify-content: center;
@@ -146,7 +131,7 @@ openSearch = () => {
 
 .search-modal.is-open {
 	opacity: 1;
-	pointer-events: auto;
+	pointer-events: auto !important;
 }
 
 .search-modal__backdrop {
@@ -154,7 +139,7 @@ openSearch = () => {
 	inset: 0;
 	width: 100vw;
 	height: 100vh;
-	background: var(--color-paper, #f9f9f9);
+	background: var(--color-paper, #fcfaf8);
 	backdrop-filter: blur(14px) saturate(1.2);
 	opacity: 0.94;
 	z-index: 0;
@@ -167,14 +152,58 @@ openSearch = () => {
 .search-modal__panel {
 	position: relative;
 	width: min(960px, 100%);
-	margin-top: clamp(32px, 6vh, 96px);
+	margin-top: clamp(24px, 6vh, 96px);
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
 	border-radius: 24px;
 	box-shadow: 0 24px 80px color-mix(in oklab, var(--color-ink, #111) 12%, transparent);
 	padding: clamp(1rem, 2vw, 1.5rem);
 	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	max-height: calc(100vh - 64px);
 }
+
+/* --- THE SCROLLING, HOVER & UNMUTE ARCHITECTURE --- */
+
+:global(#search-modal .pagefind-ui__drawer) {
+	overflow-y: auto !important;
+	max-height: 55vh !important;
+	margin-top: 1rem; /* RESTORED: Prevents crashing into the search bar */
+	padding-right: 0.5rem;
+	overscroll-behavior: contain;
+}
+
+:global(#search-modal .pagefind-ui__results) {
+	display: grid; /* RESTORED: Grid layout */
+	gap: 0.75rem;  /* RESTORED: Card spacing */
+}
+
+:global(#search-modal .pagefind-ui__result) {
+	padding: 1rem;
+	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
+	border-radius: 14px;
+	background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
+	transition: all 150ms ease !important;
+	cursor: pointer !important;
+	position: relative;
+}
+
+:global(#search-modal .pagefind-ui__result:hover) {
+	border-color: color-mix(in oklab, var(--color-ink, #111) 25%, transparent) !important;
+	background: color-mix(in oklab, var(--color-surface, #fff) 96%, var(--color-ink, #111) 4%) !important;
+	transform: translateY(-2px) !important;
+	box-shadow: 0 8px 24px color-mix(in oklab, var(--color-ink, #111) 8%, transparent) !important;
+}
+
+/* TEXT UNMUTE: Forces muted elements to turn full ink on card hover */
+:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__result-excerpt),
+:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__message),
+:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__result-title) {
+	color: var(--color-ink) !important;
+}
+
+/* --- PRESERVED ORIGINAL UI --- */
 
 .search-modal__header {
 	display: flex;
@@ -285,45 +314,6 @@ openSearch = () => {
 :global(#search-modal .pagefind-ui__search-clear:hover) {
 	border-color: var(--color-border, rgba(0, 0, 0, 0.12));
 	background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
-}
-
-/* ───────────────────────────────────────────────────────────── */
-/* FULL PAGEFIND OVERRIDE — NO VISUAL CHANGES WHATSOEVER         */
-/* Only fixes hover + click on results (your original styles untouched) */
-/* ───────────────────────────────────────────────────────────── */
-:global(#search-modal .pagefind-ui__results) {
-	margin-top: 1rem;
-	max-height: 60vh;
-	overflow-y: auto;
-	display: grid;
-	gap: 0.6rem;
-}
-
-:global(#search-modal .pagefind-ui__result) {
-	position: relative !important;
-	padding: 0.9rem 1rem;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	border-radius: 14px;
-	background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
-	transition: border-color 120ms ease, transform 120ms ease;
-}
-
-:global(#search-modal .pagefind-ui__result:hover) {
-	border-color: color-mix(in oklab, var(--color-ink, #111) 20%, transparent);
-	transform: translateY(-1px);
-}
-
-:global(#search-modal .pagefind-ui__result-link) {
-	position: absolute !important;
-	inset: 0 !important;
-	z-index: 2 !important;
-	border-radius: inherit !important;
-	text-decoration: none !important;
-}
-
-:global(#search-modal .pagefind-ui__result > *:not(.pagefind-ui__result-link)) {
-	position: relative !important;
-	z-index: 3 !important;
 }
 
 :global(#search-modal .pagefind-ui__result-title) {

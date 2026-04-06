@@ -290,45 +290,41 @@
 }
 
 /* ==========================================================================
-   HARDENED SEARCH INTERACTIVITY 
-   Fixes "Ghost Results" where items appear but aren't clickable/hoverable.
+   PAGEFIND HARDENED VISUALS & SCROLL PHYSICS
    ========================================================================== */
 
-/* Force Search Modal to sit above Chat (9999) and Mobile Nav (1000) */
-#search-modal.is-open {
-    display: flex !important;
-    z-index: 10000 !important; /* Absolute top-tier indexing */
+/* 1. SCROLL FIX: Force the drawer to handle the overflow and enable the scroll wheel */
+.pagefind-ui__drawer {
+    max-height: 55vh !important;
+    overflow-y: auto !important;
     pointer-events: auto !important;
-    visibility: visible !important;
-    opacity: 1 !important;
+    overscroll-behavior: contain !important;
+    padding-right: 0.5rem !important;
 }
 
-/* Unblock Pagefind results for all pointer and hover actions */
-:global(.pagefind-ui__result) {
-    pointer-events: auto !important;
+/* Remove conflicting scroll limits from the inner list */
+.pagefind-ui__results {
+    max-height: none !important;
+    overflow-y: visible !important;
+}
+
+/* 2. HOVER OVERRIDE: Base cursor and smooth transitions */
+.pagefind-ui__result {
     cursor: pointer !important;
-    position: relative !important;
-    z-index: 10 !important;
+    transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease !important;
 }
 
-/* Ensure results card hover animation works in the Shadow DOM */
-:global(#search-modal .pagefind-ui__result:hover) {
-    border-color: color-mix(in oklab, var(--color-ink) 30%, transparent) !important;
-    background: color-mix(in oklab, var(--color-surface) 96%, var(--color-ink) 4%) !important;
+/* 3. VISUAL FEEDBACK: The lift, shadow, and color shift on the card */
+.pagefind-ui__result:hover {
+    border-color: color-mix(in oklab, var(--color-ink) 25%, transparent) !important;
+    background-color: color-mix(in oklab, var(--color-surface) 96%, var(--color-ink) 4%) !important;
     transform: translateY(-2px) !important;
+    box-shadow: 0 8px 24px color-mix(in oklab, var(--color-ink) 8%, transparent) !important;
 }
 
-/* Force link hit-boxes to cover the entire result card */
-:global(.pagefind-ui__result-link) {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-    cursor: pointer !important;
-    text-decoration: none !important;
-}
-
-/* Prevent the main site container from blocking search interactions */
-body.search-open .site-shell {
-    pointer-events: none !important;
-    user-select: none !important;
+/* 4. TEXT UNMUTE: Forces muted excerpts and metadata to turn full ink when hovered */
+.pagefind-ui__result:hover .pagefind-ui__result-excerpt,
+.pagefind-ui__result:hover .pagefind-ui__message,
+.pagefind-ui__result:hover .pagefind-ui__result-title {
+    color: var(--color-ink) !important;
 }
