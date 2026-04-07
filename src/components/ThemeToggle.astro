@@ -9,62 +9,69 @@ const { class: className = '' } = Astro.props as Props;
 ---
 
 <button
-	type="button"
-	data-theme-toggle
-	aria-label="Toggle theme"
-	class={`${className} flex items-center justify-center `}
+    type="button"
+    data-theme-toggle
+    aria-label="Toggle theme"
+    class={`${className} flex items-center justify-center `}
 >
-	<span class="sr-only">Toggle theme</span>
-	<Icon name="tabler:moon" size={22} stroke-width={1.8} class="inline-flex [html[data-theme='dark']_&]:hidden" aria-hidden="true" />
-	
-	<Icon name="tabler:sun" size={22} stroke-width={1.8} class="hidden [html[data-theme='dark']_&]:inline-flex" aria-hidden="true" />
+    <span class="sr-only">Toggle theme</span>
+    <Icon name="tabler:moon" size={22} stroke-width={1.8} class="inline-flex [html[data-theme='dark']_&]:hidden" aria-hidden="true" />
+    
+    <Icon name="tabler:sun" size={22} stroke-width={1.8} class="hidden [html[data-theme='dark']_&]:inline-flex" aria-hidden="true" />
 </button>
 
 <script is:inline>
-const STORAGE_KEY = 'theme';
-const THEMES = ['light', 'dark'];
+(function() {
+    // 1. Lock the scope. These variables no longer exist outside this function.
+    const STORAGE_KEY = 'theme';
+    const THEMES = ['light', 'dark'];
 
-const getPreferredTheme = () => {
-	const stored = localStorage.getItem(STORAGE_KEY);
-	if (THEMES.includes(stored ?? '')) return stored;
-    
-    // FORCED DEFAULT: Ignores OS and starts in Dark mode
-	return 'dark'; 
-};
+    const getPreferredTheme = () => {
+        const stored = localStorage.getItem(STORAGE_KEY);
+        if (THEMES.includes(stored ?? '')) return stored;
+        
+        // FORCED DEFAULT: Ignores OS and starts in Dark mode
+        return 'dark'; 
+    };
 
-const applyTheme = (theme) => {
-	document.documentElement.dataset.theme = theme;
-    if (theme === 'light') {
-        document.documentElement.classList.remove('dark');
-    } else {
-        document.documentElement.classList.add('dark');
+    const applyTheme = (theme) => {
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+        }
+        const buttons = document.querySelectorAll('[data-theme-toggle]');
+        buttons.forEach((b) => b.setAttribute('aria-label', `Toggle theme (current: ${theme})`));
+    };
+
+    const nextTheme = (current) => {
+        const idx = THEMES.indexOf(current);
+        const nextIdx = idx === -1 ? 0 : (idx + 1) % THEMES.length;
+        return THEMES[nextIdx];
+    };
+
+    const toggleTheme = () => {
+        const current = document.documentElement.dataset.theme || getPreferredTheme();
+        const next = nextTheme(current);
+        localStorage.setItem(STORAGE_KEY, next);
+        applyTheme(next);
+    };
+
+    // Initialize immediately
+    applyTheme(getPreferredTheme());
+
+    // 2. Prevent duplicate listeners on page transitions
+    if (!window.__themeToggleInitialized) {
+        document.addEventListener('click', (e) => {
+            const t = e.target;
+            if (!(t instanceof Element)) return;
+            const btn = t.closest('[data-theme-toggle]');
+            if (!btn) return;
+            e.preventDefault();
+            toggleTheme();
+        });
+        window.__themeToggleInitialized = true;
     }
-	const buttons = document.querySelectorAll('[data-theme-toggle]');
-    buttons.forEach((b) => b.setAttribute('aria-label', `Toggle theme (current: ${theme})`));
-};
-
-const nextTheme = (current) => {
-	const idx = THEMES.indexOf(current);
-    const nextIdx = idx === -1 ? 0 : (idx + 1) % THEMES.length;
-	return THEMES[nextIdx];
-};
-
-const toggleTheme = () => {
-	const current = document.documentElement.dataset.theme || getPreferredTheme();
-	const next = nextTheme(current);
-	localStorage.setItem(STORAGE_KEY, next);
-	applyTheme(next);
-};
-
-// init
-applyTheme(getPreferredTheme());
-
-document.addEventListener('click', (e) => {
-	const t = e.target;
-	if (!(t instanceof Element)) return;
-	const btn = t.closest('[data-theme-toggle]');
-	if (!btn) return;
-	e.preventDefault();
-	toggleTheme();
-});
+})();
 </script>
