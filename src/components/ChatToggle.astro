@@ -1,6 +1,5 @@
 ---
 import { Icon } from 'astro-icon/components';
-const { email } = Astro.props;
 ---
 
 <div class="fixed bottom-36 right-6 md:bottom-16 md:right-16 z-[9999] flex flex-col items-end gap-4 print:hidden">
@@ -11,13 +10,13 @@ const { email } = Astro.props;
         
         <div class="relative w-full h-full bg-[color-mix(in_oklab,var(--color-surface)_10%,transparent)] backdrop-blur-2xl rounded-[calc(var(--radius-card)-2px)] flex flex-col overflow-hidden">
             <header class="p-4 border-b border-[var(--color-border)] flex justify-between items-center bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)]">
-                <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-muted">BinaryForge / Intake</span>
+                <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-muted">Initialize • Connection</span>
                 <button id="close-chat" class="text-muted hover:text-ink transition-colors p-1">
                     <Icon name="tabler:x" class="w-5 h-5" />
                 </button>
             </header>
 
-            <form id="chat-form" action="https://formspree.io/f/your-id" method="POST" class="p-6 space-y-6">
+            <form id="chat-form" action="https://formspree.io/f/xeepnrak" method="POST" class="p-6 space-y-6">
                 <div class="chat-step space-y-3 text-left">
                     <p class="text-sm text-muted italic">"Initializing... Who am I speaking with?"</p>
                     <input type="text" name="name" required placeholder="Name..." class="w-full bg-transparent border-b border-[var(--color-border)] py-2 text-ink outline-none focus:border-ink transition-colors" />
@@ -28,7 +27,7 @@ const { email } = Astro.props;
                     <div class="grid grid-cols-1 gap-2">
                         {['Interpretation', 'Consultation', 'General'].map(type => (
                             <label class="flex items-center gap-3 p-3 border border-[var(--color-border)] rounded-lg cursor-pointer hover:bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)] transition-colors">
-                                <input type="radio" name="type" value={type} class="accent-ink" />
+                                <input type="radio" name="type" value={type} required class="accent-ink" />
                                 <span class="text-[10px] uppercase font-bold tracking-widest text-muted">{type}</span>
                             </label>
                         ))}
@@ -36,10 +35,10 @@ const { email } = Astro.props;
                 </div>
 
                 <div class="chat-step hidden space-y-4 text-left">
-                    <p class="text-sm text-muted italic">"Message & Email?"</p>
+                    <p class="text-sm text-muted italic">"Message & Email"</p>
                     <textarea name="message" required rows="3" class="w-full bg-transparent border border-[var(--color-border)] p-3 text-sm text-ink outline-none rounded-lg"></textarea>
                     <input type="email" name="email" required placeholder="email@example.com" class="w-full bg-transparent border-b border-[var(--color-border)] py-2 text-ink outline-none" />
-                    <button type="submit" class="w-full py-3 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all rounded-full">Transmit ⚡</button>
+                    <button type="submit" id="submit-btn" class="w-full py-3 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all rounded-full">Transmit ⚡</button>
                 </div>
                 
                 <button type="button" id="next-btn" class="text-[10px] font-bold uppercase text-muted hover:text-ink transition-colors">Continue ↵</button>
@@ -71,6 +70,9 @@ const { email } = Astro.props;
     const close = document.getElementById('close-chat');
     const steps = document.querySelectorAll('.chat-step');
     const nextBtn = document.getElementById('next-btn');
+    const form = document.getElementById('chat-form') as HTMLFormElement;
+    const submitBtn = document.getElementById('submit-btn') as HTMLButtonElement;
+    
     let currentStep = 0;
 
     bubble?.addEventListener('click', () => {
@@ -95,6 +97,55 @@ const { email } = Astro.props;
             if (currentStep === steps.length - 1) {
                 if (nextBtn) nextBtn.classList.add('hidden');
             }
+        }
+    });
+
+    // Async Fetch Interceptor
+    form?.addEventListener('submit', async (e) => {
+        e.preventDefault(); // Kill the Formspree redirect
+        
+        if (!submitBtn) return;
+        
+        const originalText = submitBtn.innerText;
+        submitBtn.innerText = 'Transmitting...';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+        try {
+            const formData = new FormData(form);
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                // Success State: Replace form content with confirmation
+                form.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full py-10 space-y-4 animate-pulse">
+                        <span class="text-3xl text-ink">✓</span>
+                        <p class="text-[12px] text-ink font-bold tracking-widest uppercase">Message Sent</p>
+                    </div>
+                `;
+                
+                // Auto-close the widget after 3 seconds
+                setTimeout(() => {
+                    win?.classList.add('hidden');
+                    win?.classList.remove('flex');
+                }, 3000);
+            } else {
+                // Formspree rejected the payload (e.g. invalid email format)
+                submitBtn.innerText = 'Error. Retry?';
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        } catch (error) {
+            // Network failure
+            submitBtn.innerText = 'Transmission Failed';
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         }
     });
 </script>
