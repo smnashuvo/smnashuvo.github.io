@@ -6,7 +6,7 @@ import { Icon } from 'astro-icon/components';
     
     <div id="chat-window" class="hidden w-[310px] md:w-[380px] relative p-[2px] overflow-hidden rounded-[var(--radius-card)] shadow-2xl transition-all duration-300">
         
-        <div class="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,#007cf0,#6827b0,#00dfd8,#007cf0)] [mask-image:radial-gradient(circle_at_center,transparent_calc(100%-4px),black_100%)]"></div>
+        <div class="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,#007cf0,#6827b0,#00dfd8,#007cf0)] [mask-image:radial-gradient(circle_at_center,transparent_calc(100%_-_4px),black_100%)]"></div>
         
         <div class="relative w-full h-full bg-[color-mix(in_oklab,var(--color-surface)_10%,transparent)] backdrop-blur-2xl rounded-[calc(var(--radius-card)-2px)] flex flex-col overflow-hidden">
             <header class="p-4 border-b border-[var(--color-border)] flex justify-between items-center bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)]">
@@ -60,8 +60,7 @@ import { Icon } from 'astro-icon/components';
         to { transform: rotate(360deg); }
     }
     .animate-spin-slow {
-        animation: spin-slow 5s linear infinite;
-    }
+        animation: spin-slow 5s linear infinite; }
 </style>
 
 <script>
