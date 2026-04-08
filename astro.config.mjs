@@ -6,18 +6,24 @@ import pagefind from "astro-pagefind";
 import { defineConfig, fontProviders } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
-
 import icon from "astro-icon";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://smnazmul.com",
   base: '',
+
+  trailingSlash: 'always',
+  build: {
+    format: 'directory',
+  },
+
   integrations: [mdx(), sitemap(), pagefind(), icon()],
 
   vite: {
     plugins: [tailwindcss()],
   },
+
   experimental: {
     fonts: [
       {
