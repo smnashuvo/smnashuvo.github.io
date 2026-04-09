@@ -16,7 +16,9 @@ import { Icon } from 'astro-icon/components';
                 </button>
             </header>
 
-            <form id="chat-form" action="https://formspree.io/f/xeepnrak" method="POST" class="p-6 space-y-6">
+            <form id="chat-form" action="https://chat-handler.YOUR-SUBDOMAIN.workers.dev" method="POST" class="p-6 space-y-6">
+                <input type="text" name="forge_trap" class="hidden" tabindex="-1" autocomplete="off" />
+
                 <div class="chat-step space-y-3 text-left">
                     <p class="text-sm text-muted italic">"Initializing... Who am I speaking with?"</p>
                     <input type="text" name="name" required placeholder="Name..." class="w-full bg-transparent border-b border-[var(--color-border)] py-2 text-ink outline-none focus:border-ink transition-colors" />
@@ -101,7 +103,7 @@ import { Icon } from 'astro-icon/components';
 
     // Async Fetch Interceptor
     form?.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Kill the Formspree redirect
+        e.preventDefault(); // Kill the redirect
         
         if (!submitBtn) return;
         
@@ -135,7 +137,7 @@ import { Icon } from 'astro-icon/components';
                     win?.classList.remove('flex');
                 }, 3000);
             } else {
-                // Formspree rejected the payload (e.g. invalid email format)
+                // Edge rejected the payload
                 submitBtn.innerText = 'Error. Retry?';
                 submitBtn.disabled = false;
                 submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
