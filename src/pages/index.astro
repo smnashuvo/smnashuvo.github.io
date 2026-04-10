@@ -59,10 +59,10 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
                     <p class="text-sm uppercase tracking-[0.2em] text-ink">{author.location || "Chattogram, Bangladesh"}</p>
                     <div class="hidden sm:block w-px h-4 bg-[color:var(--color-border)]"></div>
                     <div class="flex items-center gap-6">
-                        <a href="/writings" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
+                        <a href="/writings/" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
                             Writings <Icon name="tabler:arrow-right" class="w-4 h-4" />
                         </a>
-                        <a href="/connect" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
+                        <a href="/connect/" class="text-sm font-bold uppercase tracking-[0.1em] text-ink hover:text-base-500 transition-colors flex items-center gap-2">
                             Connect <Icon name="tabler:arrow-right" class="w-4 h-4" />
                         </a>
                     </div>
@@ -92,8 +92,8 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
         </a>
     </div>
 
-	<PostList heading="Writings" limit={3} viewAllHref="/writings" />
-	<ProjectList heading="Lab" limit={4} viewAllHref="/lab" />
+	<PostList heading="Writings" limit={3} viewAllhref="/writings/" />
+	<ProjectList heading="Lab" limit={4} viewAllhref="/lab/" />
 
     {cv.map((section) => section.data.items && (
         <SectionList heading={section.data.heading} items={section.data.items} />

@@ -27,41 +27,41 @@ const site = await getSite();
         
         {/* DESKTOP WRITINGS PILLARS */}
         <div class="relative group">
-          <a href="/writings" class="flex items-center gap-1 hover:text-base-500 py-2">
+          <a href="/writings/" class="flex items-center gap-1 hover:text-base-500 py-2">
             Writings
             <Icon name="tabler:chevron-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
           </a>
           <div class="absolute left-0 top-full pt-2 hidden group-hover:block z-50">
             <div class="flex flex-col w-64 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-xl overflow-hidden">
-              <a href="/writings/statecraft" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Power & Statecraft</a>
-              <a href="/writings/civilization" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Civilization</a>
-              <a href="/writings/infrastructure" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Systems & Infrastructure</a>
-              <a href="/writings/cyber" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Technology & Cyber</a>
+              <a href="/writings/statecraft/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Power & Statecraft</a>
+              <a href="/writings/civilization/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Civilization</a>
+              <a href="/writings/infrastructure/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Systems & Infrastructure</a>
+              <a href="/writings/cyber/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Technology & Cyber</a>
             </div>
           </div>
         </div>
 
         {/* DESKTOP LAB DOMAINS */}
         <div class="relative group">
-          <a href="/lab" class="flex items-center gap-1 hover:text-base-500 py-2">
+          <a href="/lab/" class="flex items-center gap-1 hover:text-base-500 py-2">
             Lab
             <Icon name="tabler:chevron-down" class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
           </a>
           <div class="absolute left-0 top-full pt-2 hidden group-hover:block z-50">
             <div class="flex flex-col w-56 rounded-xl border border-[color:var(--color-border)] bg-[color:var(--color-surface)] shadow-xl overflow-hidden">
-              <a href="/lab/ai" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">AI</a>
-              <a href="/lab/android" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Android</a>
-              <a href="/lab/systems" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Systems</a>
-              <a href="/lab/reverse-engineering" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Reverse Engineering</a>
+              <a href="/lab/ai/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">AI</a>
+              <a href="/lab/android/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Android</a>
+              <a href="/lab/systems/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Systems</a>
+              <a href="/lab/reverse-engineering/" class="px-4 py-3 hover:bg-[color-mix(in_oklab,var(--color-ink)_8%,transparent)] transition-colors">Reverse Engineering</a>
             </div>
           </div>
         </div>
 
-        <HeaderLink href="/about">About</HeaderLink>
+        <HeaderLink href="/about/">About</HeaderLink>
       </div>
 
       <div class="flex items-center gap-4 border-l border-gray-300 dark:border-gray-700 pl-4 text-base-900">
-        <a href="/connect" class="text-xs 2xl:text-lg font-bold uppercase hover:text-base-500 transition-colors">Connect</a>
+        <a href="/connect/" class="text-xs 2xl:text-lg font-bold uppercase hover:text-base-500 transition-colors">Connect</a>
         <SearchModal />
         <ThemeToggle />
       </div>
@@ -88,25 +88,25 @@ const site = await getSite();
         <div class="flex flex-col gap-4 text-xl font-bold uppercase w-full">
           <HeaderLink href="/" class="w-fit">Home</HeaderLink>
           <div class="flex flex-col gap-2">
-            <HeaderLink href="/writings" class="w-fit">Writings</HeaderLink>
+            <HeaderLink href="/writings/" class="w-fit">Writings</HeaderLink>
             <div class="flex flex-col gap-3 pl-4 border-l-2 border-[color:var(--color-border)] text-sm text-base-900">
-              <a href="/writings/statecraft" class="w-fit hover:text-base-500">Power & Statecraft</a>
-              <a href="/writings/civilization" class="w-fit hover:text-base-500">Civilization</a>
-              <a href="/writings/infrastructure" class="w-fit hover:text-base-500">Systems & Infrastructure</a>
-              <a href="/writings/cyber" class="w-fit hover:text-base-500">Technology & Cyber</a>
+              <a href="/writings/statecraft/" class="w-fit hover:text-base-500">Power & Statecraft</a>
+              <a href="/writings/civilization/" class="w-fit hover:text-base-500">Civilization</a>
+              <a href="/writings/infrastructure/" class="w-fit hover:text-base-500">Systems & Infrastructure</a>
+              <a href="/writings/cyber/" class="w-fit hover:text-base-500">Technology & Cyber</a>
             </div>
           </div>
           <div class="flex flex-col gap-2">
-            <HeaderLink href="/lab" class="w-fit">Lab</HeaderLink>
+            <HeaderLink href="/lab/" class="w-fit">Lab</HeaderLink>
             <div class="flex flex-col gap-3 pl-4 border-l-2 border-[color:var(--color-border)] text-sm text-base-900">
-              <a href="/lab/ai" class="w-fit hover:text-base-500">AI</a>
-              <a href="/lab/android" class="w-fit hover:text-base-500">Android</a>
-              <a href="/lab/systems" class="w-fit hover:text-base-500">Systems</a>
-              <a href="/lab/reverse-engineering" class="w-fit hover:text-base-500">Reverse Engineering</a>
+              <a href="/lab/ai/" class="w-fit hover:text-base-500">AI</a>
+              <a href="/lab/android/" class="w-fit hover:text-base-500">Android</a>
+              <a href="/lab/systems/" class="w-fit hover:text-base-500">Systems</a>
+              <a href="/lab/reverse-engineering/" class="w-fit hover:text-base-500">Reverse Engineering</a>
             </div>
           </div>
-          <HeaderLink href="/about" class="w-fit">About</HeaderLink>
-          <HeaderLink href="/connect" class="w-fit">Connect</HeaderLink>
+          <HeaderLink href="/about/" class="w-fit">About</HeaderLink>
+          <HeaderLink href="/connect/" class="w-fit">Connect</HeaderLink>
         </div>
 
         <hr class="w-full border-[color:var(--color-border)]" />
