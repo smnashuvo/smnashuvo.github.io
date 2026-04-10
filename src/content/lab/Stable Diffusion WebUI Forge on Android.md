@@ -2,9 +2,9 @@
 title: "Project: Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
 description: "Documenting the successful deployment of SD WebUI Forge on a Snapdragon 860 using Termux, PRoot Ubuntu, and CPU-only patching."
 pubDate: '2025-12-06'
-heroImage: './stable-diffusion-v1-5.png'
+heroImage: './stable-diffusion-v1-5.jpg'
 domain: ['ai', 'android']
-tags: [android, ai, linux, termux, stable-diffusion, root, magisk, Forge WebUI]
+tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui]
 ---
 
 # 🌟 Project: Stable Diffusion 1.5 WebUI Forge on Android
@@ -133,20 +133,20 @@ def should_use_fp16():
 
 # Monkey-patch CUDA check to avoid crash
 torch.cuda.is_available = lambda: False
-### ✂️ PART 8: Model Download & Setup
-*Paste directly after Part 7.*
+```
 
-```markdown
+---
+
 ## 💾 Phase 5: Model Download & Setup
 * **Target Model:** SD 1.5 pruned (`v1-5-pruned-emaonly.safetensors`, 3.97GB).
 * **Disk Check:** >150GB available → safe to download.
 * **Download Command:**
 
-    ```bash
-    cd ~/AI/forge_webui_cpu/models/Stable-diffusion/
-    wget -O v1-5-pruned-emaonly.safetensors \
-    [https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors](https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors)
-    ```
+```bash
+cd ~/AI/forge_webui_cpu/models/Stable-diffusion/
+wget -O v1-5-pruned-emaonly.safetensors \
+[https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors](https://huggingface.co/runwayml/stable-diffusion-v1-5/resolve/main/v1-5-pruned-emaonly.safetensors)
+```
 
 * **Download Result:** 3.97GB saved in **~15m 54s** at **~4.26MB/s**.
 
@@ -159,16 +159,14 @@ torch.cuda.is_available = lambda: False
 export FORCE_CPU=1
 export CUDA_VISIBLE_DEVICES=""
 python launch.py --skip-torch-cuda-test --listen --lowram --no-half --precision full
-​* **UI:** `http://127.0.0.1:7860` accessible
+```
+
+* **UI:** `http://127.0.0.1:7860` accessible
 * **CPU-only generation:** ~3–5 minutes per 512×512 image (Poco X3 Pro, 8GB RAM)
 * **Optional:** Later test fde.ai memory swap & Vulkan GPU for acceleration
 
 ---
 
-## ✂️ PART 10: Summary & Victory
-*Paste directly after Part 9.*
-
-```markdown
 ## 📊 Phase 7: Summary of Hurdles & Solutions
 
 | Hurdle | Error / Failure | Solution |
