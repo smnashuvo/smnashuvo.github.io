@@ -36,13 +36,13 @@ const scoredPosts = allPosts
 
 {scoredPosts.length > 0 && (
     <div class="connected-systems mt-16 pt-8 border-t border-[color:var(--color-border)] transition-all duration-300">
-        <p class="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-6">Connected Systems</p>
+        <p class="text-xs font-bold uppercase tracking-[0.2em] text-muted mb-6">{collectionType === 'lab' ? 'Connected Threads...' : 'Continue Reading...'}</p>
         <ul class="space-y-4">
             {scoredPosts.map(post => {
                 const primaryTag = post.data.tags[0];
                 return (
                     <li class="group">
-                        <a href={withBase(`/${collectionType}/${post.id}/`)} class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 hover:-translate-y-0.5 transition-transform duration-200 block border-b border-transparent hover:border-[color:var(--color-border)] pb-2">
+                        <a href={withBase(`/${collectionType}/${Array.isArray(post.data.pillar ?? post.data.domain) ? (post.data.pillar ?? post.data.domain)[0] : (post.data.pillar ?? post.data.domain)}/${post.id.split('/').pop()}/`)} class="flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 hover:-translate-y-0.5 transition-transform duration-200 block border-b border-transparent hover:border-[color:var(--color-border)] pb-2">
                             <time class="text-xs font-mono text-muted shrink-0" datetime={post.data.pubDate.toISOString()}>
                                 {post.data.pubDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' })}
                             </time>

@@ -79,6 +79,7 @@ const { title, description, pubDate, updatedDate, heroImage, closingImage, tags 
                             style="max-height: 520px; object-fit: contain;" 
                             loading="eager" 
                             fetchpriority="high" 
+                        />
                     </a>
                 </figure>
             )}
@@ -244,7 +245,13 @@ const { title, description, pubDate, updatedDate, heroImage, closingImage, tags 
 
     .post-article p, .post-article li { transition: font-size 0.4s ease, line-height 0.4s ease, color 0.4s ease !important; }
     body[data-zen-font="small"] .post-article p, body[data-zen-font="small"] .post-article li { font-size: 1.125rem !important; line-height: 1.8 !important; }
-    body.reading-mode-active .post-article p, body.reading-mode-active .post-article li { font-size: 1.25rem !important; line-height: 2 !important; }
+    body.reading-mode-active .post-article p, 
+    body.reading-mode-active .post-article li { 
+        font-size: 1.25rem !important; 
+        line-height: 2 !important;
+        text-align: left !important;
+        hyphens: none !important;
+    }
     body[data-zen-font="large"] .post-article p, body[data-zen-font="large"] .post-article li { font-size: 1.5rem !important; line-height: 2.2 !important; }
 
     body.reading-mode-active header:first-of-type, body.reading-mode-active footer { opacity: 0; pointer-events: none; display: none !important; }

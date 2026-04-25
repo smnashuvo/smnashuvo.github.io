@@ -228,12 +228,22 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
 
     .post-article p, .post-article li { transition: font-size 0.4s ease, line-height 0.4s ease, color 0.4s ease !important; }
     body[data-zen-font="small"] .post-article p, body[data-zen-font="small"] .post-article li { font-size: 1.125rem !important; line-height: 1.8 !important; }
-    body.reading-mode-active .post-article p, body.reading-mode-active .post-article li { font-size: 1.25rem !important; line-height: 2 !important; }
+    body.reading-mode-active .post-hero-image, 
+    body.reading-mode-active .post-article img { 
+        opacity: 0.15 !important; 
+        filter: grayscale(100%) !important; 
+        transition: all 0.5s ease !important; 
+    }
     body[data-zen-font="large"] .post-article p, body[data-zen-font="large"] .post-article li { font-size: 1.5rem !important; line-height: 2.2 !important; }
 
     body.reading-mode-active header:first-of-type, body.reading-mode-active footer { opacity: 0; pointer-events: none; display: none !important; }
     body.reading-mode-active .section-heading .eyebrow, body.reading-mode-active .post-meta, body.reading-mode-active .section-heading ul { opacity: 0; pointer-events: none; height: 0; margin: 0; overflow: hidden; transition: all 0.5s ease; }
     body.reading-mode-active .post-page { max-width: 720px !important; transition: max-width 0.5s ease !important;}
-    body.reading-mode-active .post-hero-image { opacity: 0.15; filter: grayscale(100%); transition: all 0.5s ease !important; }
+    body.reading-mode-active .post-hero-image, 
+    body.reading-mode-active .post-article img { 
+        opacity: 0.15 !important; 
+        filter: grayscale(100%) !important; 
+        transition: all 0.5s ease !important; 
+    }
     body.reading-mode-active .connected-systems, body.reading-mode-active .distribution-lever { opacity: 0; pointer-events: none; height: 0; margin: 0; overflow: hidden; transition: all 0.5s ease; }
 </style>

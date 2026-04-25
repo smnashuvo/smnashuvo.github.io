@@ -1,7 +1,7 @@
 ---
 title: "The World Can End Hunger. It Chooses Not To."
 description: "The Cost of Power: Double Standards, Human Lives, and the Global Priority Gap."
-pubDate: '2025-10-11'
+pubDate: '2025-12-16'
 heroImage: './Hunger vs World.jpg'
 pillar: ['statecraft', 'civilization']
 tags: ['geopolitics', 'systems-analysis', 'human-rights', 'statecraft', 'economics']
