@@ -67,7 +67,19 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
 
 		{heroImage && (
 			<figure class="post-hero-image mt-8 mb-12 flex justify-center transition-all duration-500">
-				<Image src={heroImage} alt={title} class="max-w-full h-auto block" style="max-height: 550px;" loading="eager" fetchpriority="high" />
+				<a href={typeof heroImage === 'string' ? heroImage : heroImage.src}
+				   target="_blank"
+				   rel="noopener noreferrer"
+				   class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
+					<Image
+						src={heroImage}
+						alt={title}
+						class="block w-auto max-w-full mx-auto"
+						style="max-height: 520px; object-fit: contain;"
+						loading="eager"
+						fetchpriority="high"
+					/>
+				</a>
 			</figure>
 		)}
 
@@ -169,6 +181,25 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
 
 <style is:global>
     body { transition: background-color 0.8s ease, color 0.8s ease !important; }
+
+    /* Fix for manual images inside the Markdown body */
+    .post-article img {
+        display: block !important;
+        margin: 3rem auto !important;
+        max-height: 480px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+        border-radius: 2rem !important;
+        border: 1px solid var(--color-border) !important;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+
+    .post-article img:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1) !important;
+    }
 
     /* HARDENED ZEN THEME (Your Explicit Hex Codes) */
     body.reading-mode-active[data-zen-theme="light"] {

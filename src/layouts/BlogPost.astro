@@ -13,11 +13,12 @@ interface Props {
 	pubDate: Date;
 	updatedDate?: Date;
     heroImage?: ImageMetadata;
+    closingImage?: ImageMetadata;
     Content?: any;
     tags?: string[];
 }
 
-const { title, description, pubDate, updatedDate, heroImage, tags = [], Content } = Astro.props as Props;
+const { title, description, pubDate, updatedDate, heroImage, closingImage, tags = [], Content } = Astro.props as Props;
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}>
@@ -65,17 +66,43 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
                 )}
             </header>
 
-            {heroImage && (
+{heroImage && (
                 <figure class="post-hero-image mt-8 mb-12 flex justify-center transition-all duration-500">
-                    <a href={typeof heroImage === 'string' ? heroImage : heroImage.src} target="_blank" rel="noopener noreferrer" class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
-                        <Image src={heroImage} alt={title} class="max-w-full h-auto block" style="max-height: 550px;" loading="eager" fetchpriority="high" />
+                    <a href={typeof heroImage === 'string' ? heroImage : heroImage.src} 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
+                        <Image 
+                            src={heroImage} 
+                            alt={title} 
+                            class="block w-auto max-w-full mx-auto" 
+                            style="max-height: 520px; object-fit: contain;" 
+                            loading="eager" 
+                            fetchpriority="high" 
                     </a>
                 </figure>
             )}
-
             <section class="post-article mt-10">
                 <Prose>{Content ? <Content /> : <slot />}</Prose>
             </section>
+
+            {closingImage && (
+                <figure class="post-closing-image mt-8 mb-12 flex justify-center transition-all duration-500">
+                    <a href={typeof closingImage === 'string' ? closingImage : closingImage.src}
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
+                        <Image
+                            src={closingImage}
+                            alt={title}
+                            class="block w-auto max-w-full mx-auto"
+                            style="max-height: 480px; object-fit: contain;"
+                            loading="lazy"
+                            fetchpriority="low"
+                        />
+                    </a>
+                </figure>
+            )}
 
             <ConnectedSystems currentTitle={title} tags={tags} collectionType="writings" />
 
@@ -172,6 +199,24 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
 <style is:global>
     body { transition: background-color 0.8s ease, color 0.8s ease !important; }
 
+    /* Fix for manual images inside the Markdown body */
+    .post-article img {
+        display: block !important;
+        margin: 3rem auto !important; /* Spacing: mt-12 mb-8 */
+        max-height: 480px !important;
+        width: auto !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
+        border-radius: 2rem !important;
+        border: 1px solid var(--color-border) !important;
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+        transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+    }
+
+    .post-article img:hover {
+        transform: translateY(-4px) !important;
+        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1) !important;
+    }
     /* HARDENED ZEN THEME (Your Explicit Hex Codes) */
     body.reading-mode-active[data-zen-theme="light"] {
         --color-paper: #ededed !important;
@@ -205,6 +250,6 @@ const { title, description, pubDate, updatedDate, heroImage, tags = [], Content 
     body.reading-mode-active header:first-of-type, body.reading-mode-active footer { opacity: 0; pointer-events: none; display: none !important; }
     body.reading-mode-active .section-heading .eyebrow, body.reading-mode-active .post-meta, body.reading-mode-active .section-heading ul { opacity: 0; pointer-events: none; height: 0; margin: 0; overflow: hidden; transition: all 0.5s ease; }
     body.reading-mode-active .post-page { max-width: 720px !important; transition: max-width 0.5s ease !important;}
-    body.reading-mode-active .post-hero-image { opacity: 0.15; filter: grayscale(100%); transition: all 0.5s ease !important; }
+    body.reading-mode-active .post-hero-image, body.reading-mode-active .post-article img { opacity: 0.15; filter: grayscale(100%); transition: all 0.5s ease !important; }
     body.reading-mode-active .connected-systems, body.reading-mode-active .distribution-lever { opacity: 0; pointer-events: none; height: 0; margin: 0; overflow: hidden; transition: all 0.5s ease; }
 </style>

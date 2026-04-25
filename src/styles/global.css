@@ -266,9 +266,18 @@
 		padding-right: calc(var(--grid-cell) / 2);
 	}
 
-	.post-hero-image img {
-		border-radius: var(--radius-card);
-		border: 1px solid var(--color-border);
+	/* Global Article Image Hardener (Inline Support) */
+	.post-article img {
+		display: block !important;
+		margin: 3rem auto !important;
+		max-height: 480px !important; /* The smaller, uniformed limit */
+		width: auto !important;
+		max-width: 100% !important;
+		object-fit: contain !important;
+		border-radius: 2rem !important;
+		border: 1px solid var(--color-border) !important;
+		box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1) !important;
+		transition: transform 0.3s ease, box-shadow 0.3s ease !important;
 	}
 
 	.post-article {
