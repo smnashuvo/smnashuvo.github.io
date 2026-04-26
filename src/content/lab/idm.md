@@ -9,8 +9,8 @@ tags: [idm, windows, reverse-engineering, bypass, forge]
 
 # 🚀 IDM "Ghost-Atomic" Bypass: The Complete Technical Manual
 
-![OS](https://img.shields.io/badge/OS-Windows_10_Pro_Build_19045-blue?style=for-the-badge&logo=microsoft)
-![Lab](https://img.shields.io/badge/Laboratory-Forge-orange?style=for-the-badge)
+![OS](https://img.shields.io/badge/OS-Windows-blue?style=for-the-badge&logo=microsoft)
+![Lab](https://img.shields.io/badge/Laboratory-BinaryForge-orange?style=for-the-badge)
 ![Status](https://img.shields.io/badge/Status-Verified_2026-success?style=for-the-badge)
 
 ## 📖 Executive Summary
@@ -71,15 +71,15 @@ Windows Registry Editor Version 5.00
 ```
 
 ### 2. The Ghost-Atomic Master Deployer (.bat)
-This is the unified deployment tool for the **Forge** environment. It automates process termination, permission hijacking, and proxy deployment. Save as `Forge_Bypass.bat`.
+This is the unified deployment tool for the **BinaryForge** environment. It automates process termination, permission hijacking, and proxy deployment. Save as `BinaForge_IGB.bat`.
 
 ```batch
 @echo off
 :: ============================================================
 :: GHOST-ATOMIC MASTER DEPLOYER (v2026)
-:: Laboratory: Forge | Researcher: Shuvo
+:: Laboratory: BinaryForge | Researcher: S M Nazmul Alam
 :: ============================================================
-title Forge IDM Ghost-Atomic Deployer
+title BinaryForge IDM Ghost-Atomic Deployer
 setlocal enabledelayedexpansion
 
 :: 1. Elevation Validation
@@ -130,7 +130,7 @@ In a production environment, IDM will attempt to re-verify its trial state throu
 Execute the following command in an **Administrative Command Prompt** (Update the path to your `.bat` location):
 
 ```cmd
-schtasks /create /tn "Forge_IDM_Persistence" /tr "'C:\Path\To\Forge_Bypass.bat'" /sc daily /mo 15 /rl highest /f
+schtasks /create /tn "BinaryForge_IDM_Persistence" /tr "'C:\Path\To\BinaForge_IGB.bat'" /sc daily /mo 15 /rl highest /f
 ```
 
 ---
@@ -149,12 +149,12 @@ Modern browsers and software components now utilize **DNS over HTTPS (DoH)**, wh
 | :--- | :--- |
 | **Access Denied (File)** | The `IDMGrHlp.exe` is likely locked by a browser extension. Close all browsers and re-run the `takeown` routine. |
 | **Access Denied (Registry)** | Ensure you are logged into an account with Full Admin Control. In some debloated systems, Registry ACLs may need manual resetting via `regedit`. |
-| **Nag Screen Returns** | This occurs if an IDM update overwrites the "Ghost" file. Simply re-run the `Forge_Bypass.bat` to reinstate the Read-Only proxy. |
+| **Nag Screen Returns** | This occurs if an IDM update overwrites the "Ghost" file. Simply re-run the `BinaForge_IGB.bat` to reinstate the Read-Only proxy. |
 
 ---
 
-> **Disclaimer:** This walkthrough is provided strictly for educational purposes and reverse-engineering research within the **Forge** laboratory framework. Users are encouraged to support the original developers by purchasing a valid license for professional or long-term use.
+> **Disclaimer:** This walkthrough is provided strictly for educational purposes and reverse-engineering research within the **BinaryForge** laboratory framework. Users are encouraged to support the original developers by purchasing a valid license for professional or long-term use.
 
 ---
-© 2026 Forge Technical Archive | S M Nazmul Alam
+© 2026 BinaryForge Technical Archive | S M Nazmul Alam
 ```
