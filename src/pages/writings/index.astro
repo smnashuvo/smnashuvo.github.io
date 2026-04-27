@@ -5,9 +5,12 @@ import { getSite } from '../../utils/consts';
 import { withBase } from '../../utils/slugify';
 
 // Fetch all writings and sort by newest first
-const posts = (await getCollection('writings')).sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-);
+const posts = (await getCollection('writings')).sort((a, b) => {
+    const featA = a.data.featured ?? Infinity;
+    const featB = b.data.featured ?? Infinity;
+    if (featA !== featB) return featA - featB;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
 const site = await getSite();
 
 // TRANSLATION LAYER

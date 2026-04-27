@@ -4,13 +4,16 @@ import PageLayout from '../../layouts/PageLayout.astro';
 import { getSite } from '../../utils/consts';
 import { withBase, slugify } from '../../utils/slugify';
 
-const projects = (await getCollection('lab')).sort(
-	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
+const projects = (await getCollection('lab')).sort((a, b) => {
+    const featA = a.data.featured ?? Infinity;
+    const featB = b.data.featured ?? Infinity;
+    if (featA !== featB) return featA - featB;
+    return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+});
 const site = await getSite();
 
 const domainMap: Record<string, string> = {
-    'ai': 'AI & Workflows',
+    'ai': 'AI',
     'android': 'Android',
     'systems': 'Systems Engineering',
     'reverse-engineering': 'Reverse Engineering'

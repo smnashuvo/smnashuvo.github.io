@@ -13,6 +13,7 @@ const writings = defineCollection({
         // pillar: Supports single string or array.
         pillar: z.union([z.string(), z.array(z.string())]).optional(),
         tags: z.array(z.string()).optional(),
+        featured: z.number().optional(),
     }),
 });
 
@@ -23,10 +24,12 @@ const lab = defineCollection({
         title: z.string(),
         description: z.string(),
         pubDate: z.coerce.date(),
+        updatedDate: z.coerce.date().optional(),
         heroImage: image().optional(),
         // domain: Supports single string or array.
         domain: z.union([z.string(), z.array(z.string())]).optional(),
         tags: z.array(z.string()).optional(),
+        featured: z.number().optional(),
     }),
 });
 

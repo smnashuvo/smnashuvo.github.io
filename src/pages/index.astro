@@ -11,6 +11,28 @@ import ProjectList from '../components/ProjectList.astro';
 import { Icon } from 'astro-icon/components';
 
 const cv = (await getCollection("cv" as any)) as any[];
+
+// Fetch and Sort Writings: Featured first (1, 2), then by Date
+const allWritings = await getCollection("writings");
+const featuredWritings = allWritings
+    .sort((a, b) => {
+        const featA = a.data.featured ?? Infinity;
+        const featB = b.data.featured ?? Infinity;
+        if (featA !== featB) return featA - featB;
+        return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+    })
+    .slice(0, 2);
+
+// Fetch and Sort Lab: Featured first (1, 2), then by Date
+const allProjects = await getCollection("lab");
+const featuredProjects = allProjects
+    .sort((a, b) => {
+        const featA = a.data.featured ?? Infinity;
+        const featB = b.data.featured ?? Infinity;
+        if (featA !== featB) return featA - featB;
+        return b.data.pubDate.valueOf() - a.data.pubDate.valueOf();
+    })
+    .slice(0, 2);
 const site = await getSite();
 const author = site.author || {};
 
@@ -92,8 +114,8 @@ const x = socialData.find((s: any) => s.id?.toLowerCase() === 'x');
         </a>
     </div>
 
-	<PostList heading="Writings" limit={3} viewAllhref="/writings/" />
-	<ProjectList heading="Lab" limit={4} viewAllhref="/lab/" />
+	<PostList heading="Writings" posts={featuredWritings} limit={2} viewAllHref="/writings/" />
+	<ProjectList heading="Lab" items={featuredProjects} limit={2} viewAllHref="/lab/" />
 
     {cv.map((section) => section.data.items && (
         <SectionList heading={section.data.heading} items={section.data.items} />

@@ -2,9 +2,11 @@
 title: "The World Can End Hunger. It Chooses Not To."
 description: "The Cost of Power: Double Standards, Human Lives, and the Global Priority Gap."
 pubDate: '2025-12-16'
-heroImage: './Hunger vs World.jpg'
+updatedDate:
+heroImage: './hunger-vs-war.jpg'
 pillar: ['statecraft', 'civilization']
 tags: ['geopolitics', 'systems-analysis', 'human-rights', 'statecraft', 'economics']
+featured: 1
 ---
 
 Every year, the world spends approximately $2.4 trillion on military capabilities. Every year, roughly $40–50 billion could meaningfully reduce — possibly eliminate — acute hunger globally. And every year, governments and institutions that claim to uphold human rights and international stability choose the first figure over the second. 

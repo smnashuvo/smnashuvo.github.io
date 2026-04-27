@@ -32,7 +32,7 @@ The strategic core of the site. This section explores how complex systems operat
 
 The technical core of the site. This section documents functional, real-world deployments, reverse engineering, and low-level system modifications.
 
-- **AI & Workflows:** Local LLM and generative AI deployments (e.g., Stable Diffusion WebUI Forge on Snapdragon environments).
+- **AI:** Local LLM and generative AI deployments (e.g., Stable Diffusion WebUI Forge on Snapdragon environments).
 - **Android:** Deep-level OS modification, custom ROM environments, and root-level implementations (Magisk/Zygisk).
 - **Systems Engineering:** Network architecture, performance optimization, and local hosting.
 - **Reverse Engineering:** APK analysis, security hardening, and structural debloating strategies.

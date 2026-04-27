@@ -1,13 +1,14 @@
 ---
 title: 'Project: Internet Download Manager: The "Ghost-Atomic" Bypass (IGB)'
 description: "A surgical, script-free methodology for neutralizing the IDM trial while maintaining system integrity."
-pubDate: '2026-03-24'
+pubDate: '2026-04-25'
+updatedDate:
 heroImage: './IGB.png'
 domain: ['reverse-engineering', 'systems']
 tags: [idm, windows, reverse-engineering, bypass, forge]
 ---
 
-# 🚀 IDM "Ghost-Atomic" Bypass: The Complete Technical Manual
+## 🚀 IDM "Ghost-Atomic" Bypass: The Complete Technical Manual
 
 ![OS](https://img.shields.io/badge/OS-Windows-blue?style=for-the-badge&logo=microsoft)
 ![Lab](https://img.shields.io/badge/Laboratory-BinaryForge-orange?style=for-the-badge)

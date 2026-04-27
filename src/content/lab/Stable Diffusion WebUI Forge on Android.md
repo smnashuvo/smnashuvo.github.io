@@ -1,13 +1,15 @@
 ---
 title: "Project: Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
 description: "Documenting the successful deployment of SD WebUI Forge on a Snapdragon 860 using Termux, PRoot Ubuntu, and CPU-only patching."
-pubDate: '2025-12-06'
+pubDate: '2026-03-24'
+updatedDate:
 heroImage: './stable-diffusion-v1-5.jpg'
 domain: ['ai', 'android']
-tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui]
+tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui, diffusion model, autmetic1111, image generation model]
+featured: 1
 ---
 
-# 🌟 Project: Stable Diffusion 1.5 WebUI Forge on Android
+## 🌟 Project: Stable Diffusion 1.5 WebUI Forge on Android
 
 > **Device:** Xiaomi POCO X3 Pro (Codename: *vayu*)
 > **SoC:** Snapdragon 860 (7nm, Kryo 485, 8 cores)
@@ -19,7 +21,7 @@ tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui]
 
 ---
 
-## 🛠 Device-Level Kernel Tweaks & Optimizations
+### 🛠 Device-Level Kernel Tweaks & Optimizations
 
 Before installing Forge, I optimized the Android runtime environment to handle the heavy load of AI generation.
 
@@ -194,3 +196,6 @@ python launch.py --skip-torch-cuda-test --listen --lowram --no-half --precision 
 * **Performance:** ~3–5 minutes per image, memory-safe
 
 > **Note:** This document tracks all 22 days of errors, fixes, downloads, and patches.
+<div style="text-align: center; width: 100%;">
+  <sub>© 2026 BinaryForge Technical Archive | S M Nazmul Alam</sub>
+</div>
