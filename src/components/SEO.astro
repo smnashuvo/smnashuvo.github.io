@@ -1,19 +1,35 @@
 ---
 import { getSite } from "../utils/consts";
+import type { ImageMetadata } from 'astro';
 
+interface Props {
+    title?: string;
+    description?: string;
+    publishDate?: Date;
+    updatedDate?: Date;
+    image?: ImageMetadata;
+    isArticle?: boolean;
+}
+
+const { title, description, publishDate, updatedDate, image, isArticle = false } = Astro.props;
 const site = await getSite();
 const personName = "S M Nazmul Alam";
 const handle = "smnashuvo";
 const email = "hello@smnazmul.com";
 const siteUrl = "https://smnazmul.com";
 
-const jsonLd = {
-  "@context": "https://schema.org",
+const personSchema = {
   "@type": "Person",
   "name": personName,
   "alternateName": handle,
   "url": siteUrl,
   "mainEntityOfPage": siteUrl,
+  "image": {
+    "@type": "ImageObject",
+    "url": `${siteUrl}/me.jpg`,
+      "width": 880,
+      "height": 1168
+  },
   "jobTitle": [
     "Freelance Interpreter",
     "Systems & Digital Strategy Consultant",
@@ -52,7 +68,7 @@ const jsonLd = {
     `https://about.me/${handle}`,
     `https://www.youtube.com/@${handle}`,
     `https://www.rumble.com/user/${handle}`,
-    `https://scholar.google.com/citations?user=${handle}`,
+    `https://scholar.google.com/citations?user=FuCrfwsAAAAJ&hl=en`,
     "https://medium.com/@smnashuvo",
     "https://www.instagram.com/smnashuvo",
     "https://www.twitch.tv/smnashuvo",
@@ -60,6 +76,33 @@ const jsonLd = {
     "https://www.substack.com/@smnashuvo",
     "https://orcid.org/0009-0000-6593-2827"
   ]
+};
+
+let schemas: any[] = [personSchema];
+
+if (isArticle && title) {
+  schemas.push({
+    "@type": "BlogPosting",
+    "headline": title,
+    "description": description,
+    "image": image ? new URL(image.src, siteUrl).toString() : undefined,
+    "datePublished": publishDate?.toISOString(),
+    "dateModified": updatedDate ? updatedDate.toISOString() : publishDate?.toISOString(),
+    "author": {
+      "@type": "Person",
+      "name": personName,
+      "url": siteUrl
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": Astro.url.toString()
+    }
+  });
+}
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": schemas
 };
 ---
 

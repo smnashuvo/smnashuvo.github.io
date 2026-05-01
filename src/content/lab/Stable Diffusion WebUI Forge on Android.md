@@ -3,7 +3,8 @@ title: "Project: Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
 description: "Documenting the successful deployment of SD WebUI Forge on a Snapdragon 860 using Termux, PRoot Ubuntu, and CPU-only patching."
 pubDate: '2026-03-24'
 updatedDate:
-heroImage: './stable-diffusion-v1-5.jpg'
+heroImage: './s-m-nazmul-alam-stable-diffusion-on-android.jpg'
+heroAlt: "Terminal interface showing Stable Diffusion WebUI Forge running on a Poco X3 Pro via Termux and PRoot Ubuntu environment."
 domain: ['ai', 'android']
 tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui, diffusion model, autmetic1111, image generation model]
 featured: 1

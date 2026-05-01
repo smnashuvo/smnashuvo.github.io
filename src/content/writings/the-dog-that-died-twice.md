@@ -3,7 +3,8 @@ title: "The Dog That Died Twice: How Power Manufactures Loyalty"
 description: "A story from Raj Bhavan, Kolkata — and what two dog funerals reveal about power, loyalty, and the signals we cannot trust."
 pubDate: '2026-01-17'
 updatedDate:
-heroImage: './the-dog-that-died-twice.jpg'
+heroImage: './s-m-nazmul-alam-the-dog-that-died-twice.jpg'
+heroAlt: "A symbolic representation of loyalty and power dynamics, referencing the historical context of Raj Bhavan, Kolkata."
 pillar: ['infrastructure']
 tags: ['power', 'systems-analysis', 'history', 'south-asia', 'loyalty']
 ---

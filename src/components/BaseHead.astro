@@ -13,9 +13,11 @@ interface Props {
 	title: string;
 	description: string;
 	image?: ImageMetadata;
+	ogType?: 'website' | 'article';
+	imageAlt?: string;
 }
 
-const { title, description, image = FallbackImage } = Astro.props;
+const { title, description, image = FallbackImage, ogType = 'website', imageAlt } = Astro.props;
 
 /** * THE FIX: Fallback logic. 
  * If 'description' prop is empty, use 'author.bio' from site-config.yml.
@@ -24,6 +26,9 @@ const finalDescription = description || site.author.bio || "Systems & Strategy C
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
+const imageWidth = (image as ImageMetadata).width;
+const imageHeight = (image as ImageMetadata).height;
+const finalImageAlt = imageAlt || title;
 ---
 
 <script is:inline>
@@ -51,9 +56,14 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 	openGraph={{
 		basic: {
 			title,
-			type: 'website',
+			type: ogType,
 			image: imageURL.toString(),
 			url: canonicalURL.toString(),
+		},
+		image: {
+			width: imageWidth,
+			height: imageHeight,
+			alt: finalImageAlt,
 		},
 		optional: {
 			description: finalDescription,
@@ -65,7 +75,7 @@ const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
 		title,
 		description: finalDescription,
 		image: imageURL.toString(),
-		imageAlt: title,
+		imageAlt: finalImageAlt,
 	}}
 	extend={{
 		link: [

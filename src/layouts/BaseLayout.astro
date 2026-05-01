@@ -11,17 +11,27 @@ interface Props {
 	title?: string;
 	description?: string;
 	image?: ImageMetadata;
+	ogType?: 'website' | 'article';
+	imageAlt?: string;
+	publishDate?: Date;
 }
 
 const site = await getSite();
-const { title = site.author.name, description = '', image } = Astro.props;
+const { 
+	title = site.author.name, 
+	description = '', 
+	image, 
+	ogType, 
+	imageAlt, 
+	publishDate 
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={title} description={description} image={image} />
-        <SEO />
+        <BaseHead title={title} description={description} image={image} ogType={ogType} imageAlt={imageAlt} />
+        <SEO title={title} description={description} publishDate={publishDate} image={image} isArticle={ogType === 'article'} />
     </head>
     <body>
         <Header />

@@ -4,6 +4,7 @@ description: "The Cost of Power: Double Standards, Human Lives, and the Global P
 pubDate: '2025-12-16'
 updatedDate:
 heroImage: './hunger-vs-war.jpg'
+heroAlt: "A conceptual illustration contrasting global military expenditure with the minimal investment required to end world hunger."
 pillar: ['statecraft', 'civilization']
 tags: ['geopolitics', 'systems-analysis', 'human-rights', 'statecraft', 'economics']
 featured: 1
