@@ -22,7 +22,7 @@ const { title, description, image = FallbackImage, ogType = 'website', imageAlt 
 /** * THE FIX: Fallback logic. 
  * If 'description' prop is empty, use 'author.bio' from site-config.yml.
  */
-const finalDescription = description || site.author.bio || "Systems & Strategy Consultant | AI & Digital Strategy";
+const finalDescription = description || site.author.description || "S M Nazmul Alam is a Freelance Interpreter, Systems and Digital Strategy Consultant, and Independent Writer & analyst based in Bangladesh.";
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
@@ -86,7 +86,8 @@ const finalImageAlt = imageAlt || title;
 		meta: [
 			{ name: 'viewport', content: 'width=device-width,initial-scale=1' },
 			{ name: 'generator', content: Astro.generator },
-			{ name: 'description', content: finalDescription }, // Explicitly forcing the tag for Lighthouse
+			{ name: 'description', content: finalDescription },
+			{ name: 'author', content: 'S M Nazmul Alam' },
 		],
 	}}
 />
