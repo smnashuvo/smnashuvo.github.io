@@ -2,11 +2,10 @@
 title: "Project: Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
 description: "Documenting the successful deployment of SD WebUI Forge on a Snapdragon 860 using Termux, PRoot Ubuntu, and CPU-only patching."
 pubDate: '2026-03-24'
-updatedDate:
 heroImage: './s-m-nazmul-alam-stable-diffusion-on-android.jpg'
-heroAlt: "Terminal interface showing Stable Diffusion WebUI Forge running on a Poco X3 Pro via Termux and PRoot Ubuntu environment."
+heroAlt: "A Poco X3 Pro terminal screen displaying the initialization of Stable Diffusion WebUI Forge via PRoot Ubuntu, capturing the successful logic-patch for CPU-only generation on Android hardware."
 domain: ['ai', 'android']
-tags: [android, ai, linux, termux, stable-diffusion, magisk, forge webui, diffusion model, autmetic1111, image generation model]
+tags: [android, ai, linux, termux, stable-diffusion, magisk, forge-webui, diffusion-model, automatic1111, image-generation]
 featured: 1
 ---
 
@@ -15,7 +14,7 @@ featured: 1
 > **Device:** Xiaomi POCO X3 Pro (Codename: *vayu*)
 > **SoC:** Snapdragon 860 (7nm, Kryo 485, 8 cores)
 > **GPU:** Adreno 640 (Vulkan API Supported)
-> **Memory:** 8GB Physical RAM + **8GB VRAM (Swap)**
+> **Memory:** 8GB Physical RAM, **8GB VRAM (Swap)**
 > **Storage:** 256GB Internal (UFS 3.1)
 > **OS:** Low level debloated and hardened MIUI 14.0.3 Android 13 (Magisk Rooted, FDE.ai patched kernel, Zygisk-LsPosed)
 > **Environment:** Termux + PRoot (Ubuntu 22.04 LTS Jammy)
