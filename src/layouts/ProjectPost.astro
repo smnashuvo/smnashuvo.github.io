@@ -21,7 +21,7 @@ interface Props {
 const { title, description, pubDate, updatedDate, heroImage, heroAlt, tags = [], Content } = Astro.props as Props;
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} ogType="article" imageAlt={heroAlt} publishDate={pubDate}>
+<BaseLayout title={title} description={description} image={heroImage} ogType="article" imageAlt={heroAlt} publishDate={pubDate} updatedDate={updatedDate}>
     
     <div id="zen-controls" class="fixed bottom-8 right-8 z-50 flex flex-col items-center space-y-4">
         {/* 1. Font Size Button (Clean) */}

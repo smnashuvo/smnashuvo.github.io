@@ -13,7 +13,7 @@ interface Props {
 	pubDate: Date;
 	updatedDate?: Date;
     heroImage?: ImageMetadata;
-    heroAlt: string; // Aggressive SEO: Mandatory description
+    heroAlt?: string;
     closingImage?: ImageMetadata;
     Content?: any;
     tags?: string[];
@@ -22,7 +22,7 @@ interface Props {
 const { title, description, pubDate, updatedDate, heroImage, heroAlt, closingImage, tags = [], Content } = Astro.props as Props;
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} ogType="article" imageAlt={heroAlt} publishDate={pubDate}>
+<BaseLayout title={title} description={description} image={heroImage} ogType="article" imageAlt={heroAlt} publishDate={pubDate} updatedDate={updatedDate}>
     
     <div id="zen-controls" class="fixed bottom-8 right-8 z-50 flex flex-col items-center space-y-4">
         {/* 1. Font Size Button (Clean) */}
@@ -75,7 +75,9 @@ const { title, description, pubDate, updatedDate, heroImage, heroAlt, closingIma
                        class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
                         <Image 
                             src={heroImage} 
-                            alt={heroAlt} 
+                            alt={heroAlt ?? ''} 
+                            width={heroImage.width}
+                            height={heroImage.height}
                             class="block w-auto max-w-full mx-auto" 
                             style="max-height: 520px; object-fit: contain;" 
                             loading="eager" 
@@ -96,7 +98,7 @@ const { title, description, pubDate, updatedDate, heroImage, heroAlt, closingIma
                        class="inline-block rounded-[2rem] overflow-hidden border border-[color:var(--color-border)] shadow-lg hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 cursor-zoom-in">
                         <Image
                             src={closingImage}
-                            alt={heroAlt || title}
+                            alt={title}
                             class="block w-auto max-w-full mx-auto"
                             style="max-height: 480px; object-fit: contain;"
                             loading="lazy"
