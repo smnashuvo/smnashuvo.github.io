@@ -79,14 +79,15 @@ const finalImageAlt = imageAlt || title;
 	}}
 	extend={{
 		link: [
-			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+			/* Hardened: Point specifically to your geometric portrait SVG */
+			{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg?v=1' },
 			{ rel: 'sitemap', href: '/sitemap-index.xml' },
 			{ rel: 'alternate', type: 'application/rss+xml', title: site.title, href: new URL('rss.xml', Astro.site).toString() },
 		],
 		meta: [
 			{ name: 'viewport', content: 'width=device-width,initial-scale=1' },
 			{ name: 'generator', content: Astro.generator },
-			{ name: 'description', content: finalDescription },
+			/* Hardened: Removed redundant 'description' tag as it is handled by the main SEO prop */
 			{ name: 'author', content: 'S M Nazmul Alam' },
 		],
 	}}
