@@ -34,6 +34,16 @@ const {
     <head>
         <BaseHead title={title} description={description} image={image} ogType={ogType} imageAlt={imageAlt} />
         <SEO title={title} description={description} publishDate={publishDate} updatedDate={updatedDate} image={image} isArticle={ogType === 'article'} />
+    <script is:inline>
+            // Hardened Theme Injection: Executes before the body paints
+            const theme = (() => {
+                if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+                    return localStorage.getItem('theme');
+                }
+                return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            })();
+            document.documentElement.setAttribute('data-theme', theme);
+        </script>
     </head>
     <body>
         <Header />
@@ -76,10 +86,10 @@ const {
   .post-article .prose,
   .hero-bio {
     color: var(--color-ink) !important;
-    font-size: 1.125rem !important;
+    font-size: 1.125rem;
     line-height: 1.8 !important;
     opacity: 0.95 !important;
-    text-align: justify !important;
+    text-align: justify;
     hyphens: auto !important;
   }
   
