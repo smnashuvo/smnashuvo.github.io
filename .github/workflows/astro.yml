@@ -47,6 +47,22 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
+steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Ping IndexNow
+        if: success()
+        run: |
+          curl -X POST "https://www.bing.com/indexnow" \
+          -H "Content-Type: application/json; charset=utf-8" \
+          -d '{
+            "host": "smnazmul.com",
+            "key": "37bb52f50ad9443dae26a3a66a1d25a6",
+            "keyLocation": "https://smnazmul.com/37bb52f50ad9443dae26a3a66a1d25a6.txt",
+            "urlList": [
+              "https://smnazmul.com/",
+              "https://smnazmul.com/sitemap-index.xml"
+            ]
+          }'
