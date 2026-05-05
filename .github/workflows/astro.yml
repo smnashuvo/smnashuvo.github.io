@@ -34,6 +34,45 @@ jobs:
       - name: Build with Astro
         run: npm run build
 
+      - name: Extract URLs from sitemap(s)
+        run: |
+          echo "Extracting URLs..."
+          if [ -f dist/sitemap-index.xml ]; then
+            grep -oP '(?<=<loc>).*?(?=</loc>)' dist/sitemap-index.xml > sitemap_list.txt
+            > urls.txt
+            while read sitemap; do
+              FILE=$(basename "$sitemap")
+              if [ -f "dist/$FILE" ]; then
+                grep -oP '(?<=<loc>).*?(?=</loc>)' "dist/$FILE" >> urls.txt
+              fi
+            done < sitemap_list.txt
+          elif [ -f dist/sitemap.xml ]; then
+            grep -oP '(?<=<loc>).*?(?=</loc>)' dist/sitemap.xml > urls.txt
+          fi
+          sort -u urls.txt -o urls.txt
+
+      - name: Submit to IndexNow
+        run: |
+          echo "Submitting to IndexNow..."
+          if [ ! -s urls.txt ]; then
+            echo "No URLs found. Skipping."
+            exit 0
+          fi
+          URLS=$(paste -sd, urls.txt | sed 's/,/","/g')
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{
+              \"host\": \"smnazmul.com\",
+              \"key\": \"37bb52f50ad9443dae26a3a66a1d25a6\",
+              \"keyLocation\": \"https://smnazmul.com/37bb52f50ad9443dae26a3a66a1d25a6.txt\",
+              \"urlList\": [\"$URLS\"]
+            }")
+          echo "IndexNow response code: $RESPONSE"
+          if [[ "$RESPONSE" -ne 200 && "$RESPONSE" -ne 202 ]]; then
+            echo "Error: IndexNow submission failed"
+            exit 1
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -50,18 +89,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: Ping IndexNow
-        if: success()
-        run: |
-          curl -X POST "https://www.bing.com/indexnow" \
-          -H "Content-Type: application/json; charset=utf-8" \
-          -d '{
-            "host": "smnazmul.com",
-            "key": "37bb52f50ad9443dae26a3a66a1d25a6",
-            "keyLocation": "https://smnazmul.com/37bb52f50ad9443dae26a3a66a1d25a6.txt",
-            "urlList": [
-              "https://smnazmul.com/",
-              "https://smnazmul.com/sitemap-index.xml"
-            ]
-          }'
