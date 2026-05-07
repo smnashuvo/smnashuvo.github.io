@@ -34,8 +34,9 @@ const {
     <head>
         <BaseHead title={title} description={description} image={image} ogType={ogType} imageAlt={imageAlt} />
         <SEO title={title} description={description} publishDate={publishDate} updatedDate={updatedDate} image={image} isArticle={ogType === 'article'} />
-    <script is:inline>
-            // Hardened Theme Injection: Executes before the body paints
+<script is:inline>
+        // Hardened Theme Injection: Block-scoped to prevent global collision
+        {
             const theme = (() => {
                 if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
                     return localStorage.getItem('theme');
@@ -43,7 +44,8 @@ const {
                 return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
             })();
             document.documentElement.setAttribute('data-theme', theme);
-        </script>
+        }
+    </script>        
     </head>
     <body>
         <Header />
