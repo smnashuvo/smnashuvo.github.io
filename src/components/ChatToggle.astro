@@ -11,7 +11,7 @@ import { Icon } from 'astro-icon/components';
         <div class="relative w-full h-full bg-[color-mix(in_oklab,var(--color-surface)_10%,transparent)] backdrop-blur-2xl rounded-[calc(var(--radius-card)-2px)] flex flex-col overflow-hidden">
             <header class="p-4 border-b border-[var(--color-border)] flex justify-between items-center bg-[color-mix(in_oklab,var(--color-paper)_20%,transparent)]">
                 <span class="text-[10px] font-bold uppercase tracking-[0.3em] text-muted">Initialize • Connection</span>
-                <button id="close-chat" class="text-muted hover:text-ink transition-colors p-1">
+                <button id="close-chat" aria-label="Close Chat" class="text-muted hover:text-ink transition-colors p-1">
                     <Icon name="tabler:x" class="w-5 h-5" />
                 </button>
             </header>
@@ -43,12 +43,12 @@ import { Icon } from 'astro-icon/components';
                     <button type="submit" id="submit-btn" class="w-full py-3 bg-[var(--color-ink)] text-[var(--color-paper)] text-[10px] font-bold uppercase tracking-widest hover:opacity-90 transition-all rounded-full">Transmit ⚡</button>
                 </div>
                 
-                <button type="button" id="next-btn" class="text-[10px] font-bold uppercase text-muted hover:text-ink transition-colors">Continue ↵</button>
+                <button type="button" id="next-btn" aria-label="Continue to next step" class="text-[10px] font-bold uppercase text-muted hover:text-ink transition-colors">Continue ↵</button>
             </form>
         </div>
     </div>
 
-    <button id="toggle-bubble" class="group relative w-16 h-16 rounded-full overflow-hidden shadow-2xl hover:scale-105 transition-transform active:scale-95">
+    <button id="toggle-bubble" aria-label="Open Chat" class="group relative w-16 h-16 rounded-full overflow-hidden shadow-2xl hover:scale-105 transition-transform active:scale-95">
         <div class="absolute inset-0 animate-spin-slow bg-[conic-gradient(from_0deg,#007cf0,#6827b0,#00dfd8,#007cf0)] [mask-image:radial-gradient(circle,transparent_60%,black_61%)]"></div>
         <div class="relative w-full h-full flex items-center justify-center text-ink backdrop-blur-md bg-transparent">
             <Icon name="chat-intake" class="w-10 h-10" />
