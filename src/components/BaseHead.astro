@@ -19,10 +19,9 @@ interface Props {
 
 const { title, description, image = FallbackImage, ogType = 'website', imageAlt } = Astro.props;
 
-/** * THE FIX: Fallback logic. 
- * If 'description' prop is empty, use 'author.bio' from site-config.yml.
+/** * THE FIX: Fallback logic.
  */
-const finalDescription = description || site.author.description || "S M Nazmul Alam is a Freelance Interpreter, Systems and Digital Strategy Consultant, and Independent Writer & analyst based in Bangladesh.";
+const finalDescription = description || site.author.description || "S M Nazmul Alam is a Freelance Interpreter, Systems and Digital Strategy Consultant, and Writer & Analyst based in Bangladesh.";
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const imageURL = new URL((image as ImageMetadata).src, Astro.site ?? Astro.url);
