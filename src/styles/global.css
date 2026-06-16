@@ -296,6 +296,23 @@
 		margin: 0.25rem 0;
 		line-height: 1.2;
 	}
+
+	/* Structural Table Hardening for Mobile Viewports */
+	.post-article table {
+		display: block !important;
+		width: 100% !important;
+		max-width: 100%;
+		overflow-x: auto;
+		-webkit-overflow-scrolling: touch; /* Hardware acceleration for mobile swiping */
+		scrollbar-width: thin;
+		border-collapse: collapse;
+	}
+	
+	/* Prevent inline-code from collapsing table cells */
+	.post-article table th,
+	.post-article table td {
+		min-width: 140px;
+	}
 }
 
 /* ==========================================================================
