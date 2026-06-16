@@ -2,7 +2,7 @@
 title: 'Project: Internet Download Manager: The "Ghost-Atomic" Bypass (IGB)'
 description: "A surgical, script-free methodology for neutralizing the IDM trial while maintaining system integrity."
 pubDate: '2026-04-25'
-updatedDate:
+updatedDate: '2026-06-01'
 heroImage: './s-m-nazmul-alam-idm-igb.png'
 heroAlt: "Technical diagram or UI screenshot illustrating the Ghost-Atomic Bypass methodology for Internet Download Manager trial management."
 domain: ['reverse-engineering', 'systems']
