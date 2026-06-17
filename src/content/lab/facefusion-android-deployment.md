@@ -18,6 +18,10 @@ featured: 2
 
 ---
 
+> **⚠ Raw Hardware Warning:** Running heavy ONNX matrices on a smartphone (`android`)—even when strictly pinned to performance cores—generates massive thermal load. Smartphone's architecture is notorious for PMIC/SoC solder failures under sustained extreme heat. Execute this pipeline with strict system thermal monitoring and allow cool-down periods between high-resolution matrix generations.
+
+---
+
 ## 🔬 Philosophy & Architecture Overview
 
 Deploying enterprise-grade **Facial Synthesis & Latent Manipulation** models on consumer mobile hardware requires discarding the luxury of native hardware acceleration layers and optimizing for bare-metal runtime limits. FaceFusion relies natively on deep neural network architectures—specifically the InsightFace extraction framework and the ONNX runtime—to execute face detection, bounding-box tracking, and identity warping. On an unprivileged mobile platform, this necessitates a hybrid translation architecture: a native Android environment hosting a virtualized PRoot Linux container, managing isolated Python virtual environments running memory-constrained CPU instructions.
@@ -152,6 +156,23 @@ sed -i '/def detect_nsfw(vision_frame : VisionFrame) -> bool:/,/return /!b;c\def
 # Step D: Purge the compiled Python bytecode caches to enforce new text directives
 find . -type d -name "__pycache__" -exec rm -rf {} +
 ```
+
+---
+
+### Phase 6: Final Execution & Data Extraction
+With the engine lobotomized and pinned, the final step is executing the full web interface and retrieving the heavily processed output from the dynamic container cache.
+
+* **Execution Status:** The WebUI launched successfully at `http://127.0.0.1:7860`.
+* **Runtime Metric:** A 320x180 resolution image, passed through both the Swapper and GFPGAN Restorer networks, processed via pure CPU loops in **341.38 seconds** (~5.6 minutes).
+* **Failure 7 (File Retrieval):** Attempting to run a standard `cp output.png` failed because Gradio caches processed web outputs inside a randomized temporary directory rather than the repository root.
+* **Surgical Solution:** Execute a timestamp-sorted `find` command targeting the internal `proot-distro` rootfs to locate the dynamic Gradio cache, then copy it to the host Android storage:
+    ```bash
+    # 1. Locate the exact dynamic path of the newest processed image
+    find $PREFIX/var/lib/proot-distro/installed-rootfs/ubuntu/root/ -type f \( -name "*.png" -o -name "*.jpg" \) -printf "%T+ %p\n" | sort
+    
+    # 2. Extract to Android's native Download folder
+    cp /path/to/the/found/image.png /sdcard/Download/swapped_face.png
+    ```
 
 ## 🤖 Persistence & Modern Automation Mechanics
 

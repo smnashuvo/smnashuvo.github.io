@@ -7,6 +7,7 @@ heroImage: './s-m-nazmul-alam-idm-igb.png'
 heroAlt: "Technical diagram or UI screenshot illustrating the Ghost-Atomic Bypass methodology for Internet Download Manager trial management."
 domain: ['reverse-engineering', 'systems']
 tags: [idm, windows, reverse-engineering, bypass, forge]
+featured: 3
 ---
 
 ## 🚀 IDM "Ghost-Atomic" Bypass: The Complete Technical Manual
