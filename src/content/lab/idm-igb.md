@@ -1,5 +1,5 @@
 ---
-title: "Internet Download Manager: The "Ghost-Atomic" Bypass (IGB)"
+title: 'Internet Download Manager: The "Ghost-Atomic" Bypass (IGB)'
 description: "A surgical, script-free methodology for neutralizing the IDM trial while maintaining system integrity."
 pubDate: '2026-04-25'
 updatedDate: '2026-06-01'
