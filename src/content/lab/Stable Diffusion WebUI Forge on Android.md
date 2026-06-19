@@ -1,7 +1,8 @@
 ---
-title: "Project: Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
+title: " Stable Diffusion WebUI Forge on Android (Termux/PRoot)"
 description: "Documenting the successful deployment of SD WebUI Forge on a Snapdragon 860 using Termux, PRoot Ubuntu, and CPU-only patching."
 pubDate: '2026-03-24'
+updatedDate: '2026-06-19'
 heroImage: './s-m-nazmul-alam-stable-diffusion-on-android.jpg'
 heroAlt: "A Poco X3 Pro terminal screen displaying the initialization of Stable Diffusion WebUI Forge via PRoot Ubuntu, capturing the successful logic-patch for CPU-only generation on Android hardware."
 domain: ['ai', 'android']
@@ -11,13 +12,24 @@ featured: 1
 
 ## 🌟 Project: Stable Diffusion 1.5 WebUI Forge on Android
 
-> **Device:** Xiaomi POCO X3 Pro (Codename: *vayu*)
-> **SoC:** Snapdragon 860 (7nm, Kryo 485, 8 cores)
-> **GPU:** Adreno 640 (Vulkan API Supported)
-> **Memory:** 8GB Physical RAM, **8GB VRAM (Swap)**
-> **Storage:** 256GB Internal (UFS 3.1)
-> **OS:** Low level debloated and hardened MIUI 14.0.3 Android 13 (Magisk Rooted, FDE.ai patched kernel, Zygisk-LsPosed)
-> **Environment:** Termux + PRoot (Ubuntu 22.04 LTS Jammy)
+---
+
+> **⚠ Raw Hardware Warning:** Running heavy ONNX matrices on an **`android`** smartphone—even when strictly pinned to performance cores—generates massive thermal load. Smartphones' architecture is notorious for PMIC/SoC solder failures under sustained extreme heat. Execute this pipeline with strict system thermal monitoring and allow cool-down periods between high-resolution matrix generations.
+
+---
+
+## 🛠 Prerequisites & Environment Setup
+
+The execution environment requires an optimized system configuration to sustain heavy algorithmic workloads without kernel-level panics.
+
+### 📱 Device Profile & System State
+* **Hardware Unit:** Xiaomi POCO X3 Pro (*vayu*)
+* **OS:** Low level debloated and hardened MIUI 14.0.3 Android 13
+* **Processor Architecture:** Snapdragon 860 (7nm Qualcomm Kryo 485, Octa-core: $1 \times 2.96\text{ GHz} + 3 \times 2.42\text{ GHz} + 4 \times 1.78\text{ GHz}$)
+* **Memory Pool:** 8GB Physical LPDDR4X RAM + Kernel-level ZRAM Swap extension configured via FDE.ai.
+* **Storage Allocation:** 256GB Internal UFS 3.1 storage with a minimum of 20GB unallocated block space.
+* **Access State:** Bootloader unlocked, Magisk rooted, with complete read/write access to internal `/sdcard/` namespaces.
+* **Environment:** Termux + PRoot (Ubuntu 22.04 LTS Jammy)
 
 ---
 

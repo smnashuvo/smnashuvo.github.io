@@ -1,5 +1,5 @@
 ---
-title: "Project: Native FaceFusion Deployment on Android: Termux, PRoot, and Compute Isolation"
+title: "Native FaceFusion Deployment on Android: Termux, PRoot, and Compute Isolation"
 description: "Surgical deployment of a local face-swapping pipeline on mobile hardware, leveraging CPU core pinning, custom dependency mapping, and absolute content filter bypasses."
 pubDate: '2026-06-13'
 heroImage: './s-m-nazmul-alam-facefusion-on-android.jpg'

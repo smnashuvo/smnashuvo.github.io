@@ -1,5 +1,5 @@
 ---
-title: "Warlog: Neural Identity Transfer at the Edge: The TinyFace-to-FaceFusion Pivot on arm64"
+title: "Neural Identity Transfer at the Edge: The TinyFace-to-FaceFusion Pivot on arm64"
 description: "Documenting the deployment of a high-tolerance facial identity transfer pipeline on a Snapdragon 860 using Termux, PRoot Ubuntu, and the structural pivot from TinyFace CLI to FaceFusion for stable mobile inference."
 pubDate: '2026-06-11'
 heroImage: './s-m-nazmul-alam-tinyface-facefusion.jpg'
@@ -17,7 +17,7 @@ featured: 4
 
 ---
 
-> **⚠ Raw Hardware Warning:** Running heavy ONNX matrices on a smartphone (`android`)—even when strictly pinned to performance cores—generates massive thermal load. Smartphone's architecture is notorious for PMIC/SoC solder failures under sustained extreme heat. Execute this pipeline with strict system thermal monitoring and allow cool-down periods between high-resolution matrix generations.
+> **⚠ Raw Hardware Warning:** Running heavy ONNX matrices on an **`android`** smartphone—even when strictly pinned to performance cores—generates massive thermal load. Smartphones' architecture is notorious for PMIC/SoC solder failures under sustained extreme heat. Execute this pipeline with strict system thermal monitoring and allow cool-down periods between high-resolution matrix generations.
 
 ---
 
