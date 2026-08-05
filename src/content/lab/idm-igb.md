@@ -6,7 +6,7 @@ updatedDate: '2026-06-01'
 heroImage: './s-m-nazmul-alam-idm-igb.png'
 heroAlt: "Technical diagram or UI screenshot illustrating the Ghost-Atomic Bypass methodology for Internet Download Manager trial management."
 domain: ['reverse-engineering', 'systems']
-tags: [idm, windows, reverse-engineering, bypass, forge]
+tags: [idm, windows, reverse-engineering, bypass, internet-download-manager-bypass]
 featured: 3
 ---
 
@@ -54,7 +54,7 @@ This script targets the specific 2026 registry coordinates used by the latest ID
 Windows Registry Editor Version 5.00
 
 ; ============================================================
-; FORGE: ATOMIC TRIAL RESET (IGB v2.0)
+; BINARYFORGE: ATOMIC TRIAL RESET (IGB v2.0)
 ; Purpose: Purges obfuscated trial heartbeat markers
 ; ============================================================
 
