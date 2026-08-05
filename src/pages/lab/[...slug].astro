@@ -31,4 +31,41 @@ const { Content } = await render(project);
 
 <ProjectPost {...project.data}>
 	<Content />
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			const preBlocks = document.querySelectorAll('pre');
+
+			preBlocks.forEach((pre) => {
+				const wrapper = document.createElement('div');
+				wrapper.className = 'copy-code-wrapper';
+				pre.parentNode?.insertBefore(wrapper, pre);
+				wrapper.appendChild(pre);
+
+				const btn = document.createElement('button');
+				btn.className = 'copy-code-btn';
+				btn.textContent = 'COPY';
+				btn.setAttribute('aria-label', 'Copy code to clipboard');
+
+				btn.addEventListener('click', async () => {
+					const code = pre.querySelector('code')?.innerText || pre.innerText;
+					
+					try {
+						await navigator.clipboard.writeText(code);
+						btn.textContent = 'COPIED!';
+						btn.classList.add('copied');
+						
+						setTimeout(() => {
+							btn.textContent = 'COPY';
+							btn.classList.remove('copied');
+						}, 2000);
+					} catch (err) {
+						console.error('[BinaryForge] Clipboard API Execution Failed:', err);
+					}
+				});
+
+				wrapper.appendChild(btn);
+			});
+		});
+	</script>
 </ProjectPost>
