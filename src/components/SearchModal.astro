@@ -1,5 +1,4 @@
 ---
-import Search from "astro-pagefind/components/Search";
 import { Icon } from 'astro-icon/components';
 
 export interface Props {
@@ -34,17 +33,26 @@ const { class: className = '' } = Astro.props as Props;
 		<div class="search-modal__header">
 			<div class="search-modal__title">
 				<p class="search-modal__eyebrow">Search</p>
-				<h2 id="search-modal-title">Find anything on the site</h2>
+				<h2 id="search-modal-title">Explore smnazmul.com</h2>
 			</div>
 			<div class="search-modal__actions">
-				<span class="search-modal__hint">Esc</span>
 				<button type="button" class="search-close" id="search-close" aria-label="Close search dialog">
 					<Icon name="tabler:x" size={16} stroke-width={1.6} />
 				</button>
 			</div>
 		</div>
-		<Search id="search" className="pagefind-ui" uiOptions={{ showImages: false }} />
-		<p class="search-modal__footnote">Powered by Pagefind. Start typing to search posts, pages, and warlogs.</p>
+		
+		<div id="search" class="pagefind-ui w-full">
+			<form class="pagefind-ui__form" onsubmit="event.preventDefault();">
+				<input type="text" id="custom-pf-input" class="pagefind-ui__search-input" placeholder="Search posts, pages, and warlogs..." autocomplete="off">
+				<button type="button" id="custom-pf-clear" class="pagefind-ui__search-clear" style="display:none;">Clear</button>
+			</form>
+			<div class="pagefind-ui__drawer" id="custom-pf-drawer" style="display:none;">
+				<div id="custom-pf-results" class="pagefind-ui__results"></div>
+			</div>
+		</div>
+
+		<p class="search-modal__footnote">Powered by Pagefind. Start typing to search.</p>
 	</div>
 </div>
 
@@ -79,8 +87,24 @@ const { class: className = '' } = Astro.props as Props;
     }
   };
 
+  // ENGINE PRE-IGNITION: Race-Free Singleton Promise
+  let pfPromise = null;
+  const getPagefind = () => {
+    if (!pfPromise) {
+      pfPromise = import('/pagefind/pagefind.js').then(async (api) => {
+        await api.init();
+        return api;
+      }).catch(err => {
+        console.error("Pagefind Engine failed to ignite:", err);
+        pfPromise = null; 
+      });
+    }
+    return pfPromise;
+  };
+
   const openSearch = () => {
     setSearchVisibility(true);
+    getPagefind(); // Silently initialize when modal opens
     window.setTimeout(focusSearchInput, 80);
   };
 
@@ -96,21 +120,78 @@ const { class: className = '' } = Astro.props as Props;
     }
   });
 
-  // THE JS HIT-BOX FIX: Forces the entire card to trigger navigation
-  document.addEventListener('click', (e) => {
-    if (!searchModal || !searchModal.classList.contains('is-open')) return;
+  // RAW PAGEFIND API INTEGRATION
+  const pfInput = document.getElementById('custom-pf-input');
+  const pfClear = document.getElementById('custom-pf-clear');
+  const pfDrawer = document.getElementById('custom-pf-drawer');
+  const pfResults = document.getElementById('custom-pf-results');
+  let pagefindAPI = null;
 
-    const resultCard = e.target.closest('.pagefind-ui__result');
-    if (resultCard) {
-      const link = resultCard.querySelector('a.pagefind-ui__result-link');
-      if (link && e.target.tagName.toLowerCase() !== 'a') {
-        e.preventDefault();
-        window.location.href = link.href;
+  if (pfInput) {
+    let debounceTimer;
+    
+    pfInput.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      const query = e.target.value;
+      pfClear.style.display = query ? 'block' : 'none';
+      
+      if (query.trim().length > 0) {
+        pfDrawer.style.display = 'block';
+        
+        debounceTimer = setTimeout(async () => {
+          const api = await getPagefind();
+          if (!api) {
+            pfResults.innerHTML = '<p class="pagefind-ui__message">Search engine currently unavailable.</p>';
+            return;
+          }
+          
+          const search = await api.search(query);
+          pfResults.innerHTML = '';
+          
+          const topResults = search.results.slice(0, 15);
+          if (topResults.length === 0) {
+              pfResults.innerHTML = '<p class="pagefind-ui__message">No results found for your query.</p>';
+              return;
+          }
+
+          for (const result of topResults) {
+            const data = await result.data();
+
+            const a = document.createElement('a');
+            a.className = 'pagefind-ui__result';
+            a.href = data.url;
+            a.style.display = 'block';
+            a.style.textDecoration = 'none';
+
+            const title = document.createElement('p');
+            title.className = 'pagefind-ui__result-title';
+            title.textContent = data.meta.title;
+
+            const excerpt = document.createElement('p');
+            excerpt.className = 'pagefind-ui__result-excerpt';
+            excerpt.innerHTML = data.excerpt;
+
+            a.appendChild(title);
+            a.appendChild(excerpt);
+            pfResults.appendChild(a);
+          }
+        }, 150);
+      } else {
+        pfDrawer.style.display = 'none';
+        pfResults.innerHTML = '';
       }
-    }
-  });
+    });
 
-})();
+    pfClear.addEventListener('click', () => {
+      pfInput.value = '';
+      pfClear.style.display = 'none';
+      pfDrawer.style.display = 'none';
+      pfResults.innerHTML = '';
+      pfInput.focus();
+    });
+  }
+
+  })();
 </script>
 
 <style is:inline>
@@ -166,41 +247,69 @@ const { class: className = '' } = Astro.props as Props;
 
 /* --- THE SCROLLING, HOVER & UNMUTE ARCHITECTURE --- */
 
-:global(#search-modal .pagefind-ui__drawer) {
+#search-modal .pagefind-ui__drawer {
 	overflow-y: auto !important;
 	max-height: 55vh !important;
-	margin-top: 1rem; /* RESTORED: Prevents crashing into the search bar */
+	margin-top: 1rem;
+	margin-bottom: 1.5rem; /* Protected airspace for the footnote */
 	padding-right: 0.5rem;
 	overscroll-behavior: contain;
 }
 
-:global(#search-modal .pagefind-ui__results) {
-	display: grid; /* RESTORED: Grid layout */
-	gap: 0.75rem;  /* RESTORED: Card spacing */
+/* CYBERNETIC SCROLLBAR */
+#search-modal .pagefind-ui__drawer::-webkit-scrollbar {
+	width: 8px; /* Widened for usability */
+}
+#search-modal .pagefind-ui__drawer::-webkit-scrollbar-track {
+	background: transparent;
+}
+#search-modal .pagefind-ui__drawer::-webkit-scrollbar-thumb {
+	background: color-mix(in oklab, var(--color-ink) 20%, transparent);
+	border-radius: 8px;
+}
+#search-modal .pagefind-ui__drawer::-webkit-scrollbar-thumb:hover {
+	background: var(--color-ink); /* Absolute contrast snap */
 }
 
-:global(#search-modal .pagefind-ui__result) {
+#search-modal .pagefind-ui__results {
+	display: grid;
+	gap: 0.75rem;
+}
+
+#search-modal .pagefind-ui__result {
 	padding: 1rem;
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
 	border-radius: 14px;
-	background: color-mix(in oklab, var(--color-surface, #fff) 92%, transparent);
-	transition: all 150ms ease !important;
+	background: transparent;
+	transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) !important;
 	cursor: pointer !important;
 	position: relative;
 }
 
-:global(#search-modal .pagefind-ui__result:hover) {
-	border-color: color-mix(in oklab, var(--color-ink, #111) 25%, transparent) !important;
-	background: color-mix(in oklab, var(--color-surface, #fff) 96%, var(--color-ink, #111) 4%) !important;
-	transform: translateY(-2px) !important;
-	box-shadow: 0 8px 24px color-mix(in oklab, var(--color-ink, #111) 8%, transparent) !important;
+/* VIOLENT HOVER PHYSICS */
+#search-modal .pagefind-ui__result:hover {
+	border-color: color-mix(in oklab, var(--color-ink) 45%, transparent) !important;
+	background: color-mix(in oklab, var(--color-ink) 8%, transparent) !important;
+	transform: translateY(-4px) !important;
+	box-shadow: 0 12px 32px color-mix(in oklab, var(--color-ink) 12%, transparent) !important;
 }
 
-/* TEXT UNMUTE: Forces muted elements to turn full ink on card hover */
-:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__result-excerpt),
-:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__message),
-:global(#search-modal .pagefind-ui__result:hover .pagefind-ui__result-title) {
+/* TEXT UNMUTE OVERRIDE */
+#search-modal .pagefind-ui__result:hover .pagefind-ui__result-excerpt,
+#search-modal .pagefind-ui__result:hover .pagefind-ui__message,
+#search-modal .pagefind-ui__result:hover .pagefind-ui__result-title {
 	color: var(--color-ink) !important;
+	opacity: 1 !important;
+}
+
+#search-modal mark {
+	background: color-mix(in oklab, var(--color-ink) 12%, transparent) !important;
+	color: var(--color-ink) !important;
+	font-weight: 700;
+	padding: 0.15rem 0.3rem;
+	border-radius: 6px;
+	text-decoration: none;
+	box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--color-ink) 20%, transparent);
 }
 
 /* --- PRESERVED ORIGINAL UI --- */
@@ -232,19 +341,7 @@ const { class: className = '' } = Astro.props as Props;
 	gap: 0.65rem;
 }
 
-.search-modal__hint {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 42px;
-	padding: 0.35rem 0.5rem;
-	border-radius: 10px;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 85%, var(--color-ink, #111) 4%);
-	font-size: 0.72rem;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
-}
+/* Purged dead ESC hint CSS */
 
 .search-close {
 	display: inline-flex;
@@ -253,16 +350,16 @@ const { class: className = '' } = Astro.props as Props;
 	width: 36px;
 	height: 36px;
 	border-radius: 12px;
-	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 90%, transparent);
-	color: var(--color-ink, currentColor);
+	border: 1px solid color-mix(in oklab, var(--color-ink) 15%, transparent);
+	background: transparent;
+	color: var(--color-ink);
 	cursor: pointer;
 	transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
 }
 
 .search-close:hover {
-	border-color: color-mix(in oklab, var(--color-ink, #111) 26%, transparent);
-	background: color-mix(in oklab, var(--color-surface, #fff) 82%, var(--color-ink, #111) 6%);
+	border-color: color-mix(in oklab, var(--color-ink) 35%, transparent);
+	background: color-mix(in oklab, var(--color-ink) 10%, transparent);
 	transform: translateY(-1px);
 }
 
@@ -272,62 +369,82 @@ const { class: className = '' } = Astro.props as Props;
 	color: var(--color-muted, #6b6b6b);
 }
 
-:global(body.search-open) {
+body.search-open {
 	overflow: hidden;
 }
 
-:global(#search-modal .pagefind-ui) {
+#search-modal .pagefind-ui {
 	width: 100%;
 }
 
-:global(#search-modal .pagefind-ui__form) {
+#search-modal .pagefind-ui__form {
 	display: flex;
 	align-items: center;
 	gap: 0.65rem;
-	padding: 0.85rem 1rem;
-	border-radius: 18px;
+	padding: 0.25rem 0.75rem;
+	border-radius: 12px;
 	border: 1px solid var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-surface, #fff) 94%, transparent);
+	background: color-mix(in oklab, var(--color-surface, #1a1a1a) 94%, transparent);
 	box-shadow:
-		inset 0 0 0 1px color-mix(in oklab, var(--color-ink, #111) 6%, transparent),
-		0 16px 36px color-mix(in oklab, var(--color-ink, #111) 10%, transparent);
+		inset 0 0 0 1px color-mix(in oklab, var(--color-ink) 6%, transparent),
+		0 16px 36px color-mix(in oklab, var(--color-ink) 10%, transparent);
+	transition: border-color 150ms ease;
 }
 
-:global(#search-modal .pagefind-ui__search-input) {
+#search-modal .pagefind-ui__form:focus-within {
+	border-color: color-mix(in oklab, var(--color-ink) 35%, transparent);
+}
+
+#search-modal .pagefind-ui__search-input {
 	flex: 1;
 	border: none;
 	background: transparent;
-	font-size: 1rem;
+	font-size: 0.95rem;
+	padding: 0.25rem 0;
 	color: var(--color-ink, currentColor);
 	outline: none;
 }
 
-:global(#search-modal .pagefind-ui__search-clear) {
-	border-radius: 10px;
-	padding: 0.35rem 0.5rem;
-	border: 1px solid transparent;
-	background: color-mix(in oklab, var(--color-ink, #111) 6%, transparent);
+#search-modal .pagefind-ui__search-clear {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	height: 22px; 
+	border-radius: 6px;
+	padding: 0 0.5rem;
+	font-size: 0.72rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	border: 1px solid color-mix(in oklab, var(--color-ink) 25%, transparent);
+	background: transparent;
+	color: var(--color-ink);
+	opacity: 0.95; 
 	cursor: pointer;
-	transition: border-color 120ms ease, background-color 120ms ease;
+	transition: all 150ms ease;
 }
 
-:global(#search-modal .pagefind-ui__search-clear:hover) {
-	border-color: var(--color-border, rgba(0, 0, 0, 0.12));
-	background: color-mix(in oklab, var(--color-ink, #111) 8%, transparent);
+#search-modal .pagefind-ui__search-clear:hover {
+	border-color: color-mix(in oklab, var(--color-ink) 45%, transparent);
+	background: color-mix(in oklab, var(--color-ink) 8%, transparent); /* Subtle cybernetic glow */
+	color: var(--color-ink); /* Text unmutes to pure absolute contrast */
 }
 
-:global(#search-modal .pagefind-ui__result-title) {
+#search-modal .pagefind-ui__result-title {
 	margin: 0 0 0.35rem;
 	font-size: 1rem;
 	font-weight: 700;
 }
 
-:global(#search-modal .pagefind-ui__result-excerpt) {
+#search-modal .pagefind-ui__result-excerpt {
 	margin: 0;
-	color: var(--color-muted, #6b6b6b);
+	color: var(--color-ink);
+	opacity: 0.55; /* Severely muted by default */
+	font-size: 0.9rem;
+	line-height: 1.5;
+	transition: opacity 150ms ease;
 }
 
-:global(#search-modal .pagefind-ui__message) {
+#search-modal .pagefind-ui__message {
 	text-align: left;
 	font-size: 0.95rem;
 	color: var(--color-muted, #6b6b6b);
